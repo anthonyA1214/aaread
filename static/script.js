@@ -33,6 +33,17 @@ function toggleItems(theme) {
     themeToggle.innerHTML = theme === "dark" 
         ? '<i class="bi bi-sun-fill"></i>' 
         : '<i class="bi bi-moon-stars-fill"></i>';
-
-    
 }
+
+const alertBoxes = document.querySelectorAll('.toast');
+
+setTimeout(() => {
+    alertBoxes.forEach(alert => {
+        alert.style.transition = 'opacity 0.5s ease-in-out';
+        alert.style.opacity = '0';
+        setTimeout(() => {
+            alert.classList.remove('show');
+            alert.style.display = 'none';
+        }, 500); // Wait for the transition to finish before removing the class
+    });
+}, 3000); // 3 seconds

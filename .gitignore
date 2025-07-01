@@ -7,3 +7,6 @@ __pycache__/
 
 # database query .schema
 log.sql
+
+# flask session files
+flask_session/

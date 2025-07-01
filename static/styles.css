@@ -1,12 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
 
+.btn-outline-primary {
+    --bs-btn-color: #3F51B5;
+    --bs-btn-border-color: #3F51B5;
+
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #3F51B5;
+    --bs-btn-hover-border-color: #3F51B5;
+
+    --bs-btn-focus-shadow-rgb: 63, 81, 181;
+    --bs-btn-focus-shadow: 0 0 0 0.2rem rgba(63, 81, 181, 0.25);
+    
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #3F51B5;
+    --bs-btn-active-border-color: #3F51B5;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+
+    --bs-btn-disabled-color: #3F51B5;
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: #3F51B5;
+}
+
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #3F51B5;
+  --bs-btn-border-color: #3F51B5;
+
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #5C6BC0;
+  --bs-btn-hover-border-color: #5C6BC0;
+
+  --bs-btn-focus-shadow-rgb: 63, 81, 181; /* RGB for #3F51B5 */
+
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #3F51B5;
+  --bs-btn-active-border-color: #3F51B5;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #3F51B5;
+  --bs-btn-disabled-border-color: #3F51B5;
+}
+
 path {
   transform: translateZ(0); /* triggers GPU rendering */
 }
 
+.sora {
+    font-family: 'Sora', sans-serif;
+}
+
 .nav-link {
     transition: color 0.3s ease;
-    font-family: 'Sora', sans-serif;
 }
 
 .nav-link:hover {
@@ -15,14 +60,34 @@ path {
 
 .nav-link.active {
     color: #3F51B5 !important;
-    border-bottom: #3F51B5 2px solid !important;
+}
+
+@media (min-width: 992px) {
+  .nav-link.active {
+    border-bottom: 2px solid #3F51B5 !important; /* Add a bottom border for active links */
+  }
 }
 
 .navbar-brand {
     transition: color 0.3s ease;
-    font-family: 'Sora', sans-serif;
 }
 
 .navbar-brand:hover {
     color: #5C6BC0 !important;
+}
+
+/* Form styles */
+.form-control:focus {
+    border-color: #3F51B5;
+    box-shadow: 0 0 0 0.2rem rgba(63, 81, 181, 0.25);
+}
+
+.auth-link a {
+  color: #5C6BC0 !important; /* link color */
+  text-decoration: none !important; /* optional, remove underline */
+}
+
+.auth-link a:hover {
+  color: #3F51B5 !important; /* link color on hover */
+  text-decoration: underline !important; /* optional, underline on hover */
 }
