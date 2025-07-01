@@ -4,3 +4,6 @@ venv/
 # Python cache files
 __pycache__/
 *.pyc
+
+# database query .schema
+log.sql

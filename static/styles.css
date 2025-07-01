@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
+
+path {
+  transform: translateZ(0); /* triggers GPU rendering */
+}
+
+.nav-link {
+    transition: color 0.3s ease;
+    font-family: 'Sora', sans-serif;
+}
+
+.nav-link:hover {
+    color: #5C6BC0 !important;
+}
+
+.nav-link.active {
+    color: #3F51B5 !important;
+    border-bottom: #3F51B5 2px solid !important;
+}
+
+.navbar-brand {
+    transition: color 0.3s ease;
+    font-family: 'Sora', sans-serif;
+}
+
+.navbar-brand:hover {
+    color: #5C6BC0 !important;
+}
