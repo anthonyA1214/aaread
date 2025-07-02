@@ -14,7 +14,7 @@
     <body class="d-flex flex-column min-vh-100">
         <!-- Header with navigation -->
         <header>
-            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm border-bottom">
                 <div class="container">
                     <div class="d-flex align-items-center">
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,18 +33,52 @@
                     </div>
 
                     <!-- right side buttons -->
-                    <div class="d-flex align-item ms-auto order-lg-2">
+                    <div class="d-flex align-items-end ms-auto order-lg-2">
                         <!-- Toggle dark light mode -->
                         <button class="btn btn-outline-secondary ms-2" id="themeToggle">
                             <i class="bi bi-moon-stars-fill"></i> 
                         </button>
 
-                        <!-- user sign in button -->
                         {% if is_loggedin %}
-                            <button class="btn btn-outline-secondary ms-2" id="logInButton">
-                                <i class="bi bi-person-fill"></i>
-                            </button>
+                            <!-- user dropdown -->
+                            <div class="position-relative d-inline-block">
+                                <button class="btn btn-outline-secondary ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#userDropdown" aria-expanded="false" aria-controls="userDropdown">
+                                    <i class="bi bi-person-fill"></i>
+                                </button>
+
+                                <div class="collapse position-absolute end-0 mt-2" id="userDropdown" style="width: 250px; z-index: 1100;">
+                                    <div class="card card-body">
+                                        <ul class="list-unstyled mb-0">
+                                            <li><h5 class="fw-semibold mb-2 sora">Howdy, {{ username }}! 👋</h5></li>
+                                            <hr class="my-2">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="sora">Role:</span>
+                                                <span class="badge bg-secondary">{{ 'Admin' if is_admin else 'User' }}</span>
+                                            </div>
+                                            <hr class="my-2">
+                                            <li>
+                                                <a class="btn btn-outline-primary w-100 sora my-1" href="/settings">
+                                                    <i class="bi bi-gear-fill"></i> Settings
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="btn btn-outline-danger w-100 sora my-1" href="{{ url_for('logout', next=request.path) }}">
+                                                    <i class="bi bi-box-arrow-right"></i> Log Out
+                                                </a>
+                                            </li>
+                                            {% if is_admin %}
+                                            <li>
+                                                <a class="btn btn-outline-success w-100 sora my-1" href="/admin">
+                                                    <i class="bi bi-shield-lock-fill"></i> Admin Panel
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         {% else %}
+                            <!-- user sign in button -->
                             <a class="btn btn-outline-primary ms-2 sora" href="/login">
                                 <i class="bi bi-person-fill"></i> Log In
                             </a>
@@ -70,6 +104,7 @@
                             {% endif %}
                         </ul>
                     </div>
+                    
                 </div>
             </nav>
         </header>
@@ -97,13 +132,13 @@
                 </div>
             </div>
         </main>
-
+        
         <!-- Footer -->
-        <footer class="pt-4 border-top">
+        <footer class="py-3 mt-auto shadow-sm border-top bg-body-tertiary">
             <div class="container text-center">
-                <p>Made with <i class="bi bi-heart-fill text-danger"></i> by anthonyA1214</p>
-                <p>Powered by Flask and Bootstrap</p>
-                <p>&copy; anthonyA1214 2025</p>
+                <p class="fs-6 my-0">Made with <i class="bi bi-heart-fill text-danger"></i> by anthonyA1214</p>
+                <p class="fs-6 my-0">Powered by Flask and Bootstrap</p>
+                <p class="fs-6 my-0">&copy; anthonyA1214 2025</p>
             </div>
         </footer>
 

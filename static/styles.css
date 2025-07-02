@@ -76,7 +76,11 @@ path {
     color: #5C6BC0 !important;
 }
 
-/* Form styles */
+.navbar-toggler:focus {
+  box-shadow: none !important;
+}
+
+/* ========== Form styles ========== */
 .form-control:focus {
     border-color: #3F51B5;
     box-shadow: 0 0 0 0.2rem rgba(63, 81, 181, 0.25);
@@ -91,3 +95,4 @@ path {
   color: #3F51B5 !important; /* link color on hover */
   text-decoration: underline !important; /* optional, underline on hover */
 }
+

@@ -4,12 +4,15 @@ from flask import Flask, render_template, redirect, request, session, g, flash, 
 from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
 from email_validator import validate_email, EmailNotValidError
+from urllib.parse import urljoin, urlparse
 import sqlite3
 
 from auth import login_required, admin_required
 
 # Configure the Flask application
 app = Flask(__name__)
+
+PRIVATE_PATHS = ['/library', '/upload']
 
 # set a secret key for session management
 app.secret_key = os.urandom(24)
@@ -28,6 +31,15 @@ def get_db():
     return db
 
 
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return (
+        test_url.scheme in ('http', 'https') and
+        ref_url.netloc == test_url.netloc
+    )
+
+
 @app.before_request
 def load_user():
     """Load the user from the session before each request."""
@@ -37,12 +49,13 @@ def load_user():
 @app.context_processor
 def inject_user():
     """Inject the user information into the template context."""
-    return dict(is_loggedin=session.get('user_id') is not None, is_admin=session.get('user_role') == 'admin')
+    return dict(is_loggedin=session.get('user_id') is not None, is_admin=session.get('user_role') == 'admin', username=session.get('username'))
 
 
 @app.route('/')
 def index():
     """Render the index page."""
+
     return render_template('index.html')
 
 
@@ -50,36 +63,27 @@ def index():
 def login():
     """Handle user login."""
 
-    messages = get_flashed_messages(with_categories=True)
-    session.clear()  # Clear the session to ensure no previous session data is present
-    if messages:
-        for category, message in messages:
-            flash(message, category)
-    # If the user is already logged in, redirect to the novels page
-    if 'user_id' in session:
-        flash("You are already logged in.", "info")
-        return redirect('/')
-    
     # If the request method is POST, handle the login logic
     if request.method == 'POST':
-        username = request.form['username']
+        # Get the username and password from the form
+        usernameEmail = request.form['usernameEmail']
         password = request.form['password']
 
-        if not username or not password:
-            flash("Username and password are required.", "danger")
+        if not usernameEmail or not password:
+            flash("Username (or email) and password are required.", "danger")
             return render_template('login.html')
         
         # Connect to the database
         db = get_db()
         cursor = db.cursor()
         user = cursor.execute(
-            "SELECT * FROM users WHERE username = ?", (username,)
+            "SELECT * FROM users WHERE username = ? OR email = ?", (usernameEmail, usernameEmail)
         ).fetchone()
         db.close()
 
         # Check if the user exists and if the password matches
         if user is None or not check_password_hash(user['hashed_password'], password):
-            flash("Invalid username or password.", "danger")
+            flash("Invalid username (or email) or password.", "danger")
             return render_template('login.html')
         
         # Store user information in the session
@@ -92,12 +96,29 @@ def login():
         
     # If the request method is GET, render the login page        
     else:
+        messages = get_flashed_messages(with_categories=True)
+        if messages:
+            for category, message in messages:
+                flash(message, category)
+
+        # If the user is already logged in, redirect to the novels page
+        if 'user_id' in session:
+            flash("You are already logged in.", "info")
+            return redirect('/')
+        
+        session.clear()  # Clear the session to ensure no previous session data is present
+
         return render_template('login.html')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     """Handle user signup."""
+
+    if 'user_id' in session:
+        flash("You are already logged in.", "info")
+        return redirect('/')
+
     if request.method == 'POST':
         email = request.form['email']
         username = request.form['username']
@@ -181,10 +202,20 @@ def signup():
 def logout():
     """Handle user logout."""
 
+    next_page = request.args.get('next') or '/'
+
     session.clear()  # Clear the session   
 
     flash("You have been logged out.", "info")
-    return redirect('/')
+
+    if not is_safe_url(next_page):
+        return redirect('/')
+    
+    parsed_next = urlparse(next_page).path
+    if parsed_next in PRIVATE_PATHS:
+        return redirect('/')
+
+    return redirect(next_page)
     
 
 @app.route('/novels', methods=['GET', 'POST'])
@@ -207,17 +238,22 @@ def library():
 
 
 @app.route('/upload', methods=['GET', 'POST'])
-@login_required
 @admin_required
 def upload():
     """Handle file uploads."""
     if request.method == 'POST':
-        file = request.files['file']
         # Here you would typically save the file to a server or cloud storage
         return redirect('/library')
     else:
         return render_template('upload.html')
     
+
+@app.route('/admin')
+@admin_required
+def admin():
+    """Admin panel."""
+    return render_template('admin/admin_index.html')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

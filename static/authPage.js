@@ -31,7 +31,29 @@ if (showPasswordConfirmation) {
 }
 
 // input validation for the signup page
-const signupForm = document.querySelector('#signupForm');
+const signupForm = document.getElementById('signupForm');
+
+// Function to show error messages
+function showError(inputId, errorId, message) {
+    const input = document.getElementById(inputId);
+    const errorElement = document.getElementById(errorId);
+    input.classList.add('is-invalid');
+    errorElement.textContent = message;
+
+    return false; // Indicate that the form is not valid
+}
+
+// Function to clear validation messages
+function clearValidation(inputId, errorId) {
+    const input = document.getElementById(inputId);
+    if (input) {
+        input.classList.remove('is-invalid');
+    }
+    const errorElement = document.getElementById(errorId);
+    if (errorElement) {
+        errorElement.textContent = '';
+    }
+}
 
 if (signupForm) {
     signupForm.addEventListener('submit', (event) => {
@@ -52,55 +74,34 @@ if (signupForm) {
 
         // Validate email
         if (!email.value.trim()) {
-            showError('email', 'emailError', 'Email is required.');
+            isValid = showError('email', 'emailError', 'Email is required.');
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-            showError('email', 'emailError', 'Please enter a valid email address.');
+            isValid = showError('email', 'emailError', 'Please enter a valid email address.');
         }
 
         // Validate username
         if (!username.value.trim()) {
-            showError('username', 'usernameError', 'Username is required.');
+            isValid = showError('username', 'usernameError', 'Username is required.');
         } else if (username.value.length < 3 || username.value.length > 20) {
-            showError('username', 'usernameError', 'Username must be between 3 and 20 characters.');
+            isValid = showError('username', 'usernameError', 'Username must be between 3 and 20 characters.');
         } else if (!/^[a-zA-Z0-9]+$/.test(username.value)) {
-            showError('username', 'usernameError', 'Username must be alphanumeric.');
+            isValid = showError('username', 'usernameError', 'Username must be alphanumeric.');
         }
 
         // Validate password
         if (!password.value.trim()) {
-            showError('password', 'passwordError', 'Password is required.');
+            isValid = showError('password', 'passwordError', 'Password is required.');
         } else if (password.value.length < 6 || password.value.length > 20) {
-            showError('password', 'passwordError', 'Password must be between 6 and 20 characters.');
+            isValid = showError('password', 'passwordError', 'Password must be between 6 and 20 characters.');
         }
 
         // Validate confirm password
         if (!confirmPassword.value.trim()) {
-            showError('confirm_password', 'confirmPasswordError', 'Password confirmation is required.');
+            isValid = showError('confirm_password', 'confirmPasswordError', 'Password confirmation is required.');
         } else if (confirmPassword.value.length < 6 || confirmPassword.value.length > 20) {
-            showError('confirm_password', 'confirmPasswordError', 'Password confirmation must be between 6 and 20 characters.');
+            isValid = showError('confirm_password', 'confirmPasswordError', 'Password confirmation must be between 6 and 20 characters.');
         } else if (confirmPassword.value !== password.value) {
-            showError('confirm_password', 'confirmPasswordError', 'Passwords do not match.');
-        }
-
-        // Function to show error messages
-        function showError(inputId, errorId, message) {
-            const input = document.getElementById(inputId);
-            const errorElement = document.getElementById(errorId);
-            input.classList.add('is-invalid');
-            errorElement.textContent = message;
-            isValid = false;
-        }
-
-        // Function to clear validation messages
-        function clearValidation(inputId, errorId) {
-            const input = document.getElementById(inputId);
-            if (input) {
-                input.classList.remove('is-invalid');
-            }
-            const errorElement = document.getElementById(errorId);
-            if (errorElement) {
-                errorElement.textContent = '';
-            }
+            isValid = showError('confirm_password', 'confirmPasswordError', 'Passwords do not match.');
         }
 
         // If all validations pass, submit the form
@@ -123,4 +124,53 @@ if (signupForm) {
     });
 }
 
+// input validation for the login page
+const loginForm = document.getElementById('loginForm');
 
+if (loginForm) {
+    loginForm.addEventListener('submit', (event) => {
+        
+        event.preventDefault(); // Prevent the form from submitting immediately
+        
+        const usernameEmail = document.getElementById('usernameEmail');
+        const password = document.getElementById('password');
+
+        let isValid = true;
+
+        // Clear previous error messages
+        clearValidation('usernameEmail', 'usernameEmailError');
+        clearValidation('password', 'passwordError');
+
+        // Validate username/email
+        if (!usernameEmail.value.trim()) {
+            isValid = showError('usernameEmail', 'usernameEmailError', 'Username or email is required.');
+        } else if (usernameEmail.value.length < 3) {
+            isValid = showError('usernameEmail', 'usernameEmailError', 'Username or email must be at least 3 characters long.');
+        } else if (!/^[a-zA-Z0-9@.]+$/.test(usernameEmail.value)) {
+            isValid = showError('usernameEmail', 'usernameEmailError', 'Username or email must be alphanumeric or contain @ and .');
+        } 
+
+        // Validate password
+        if (!password.value.trim()) {
+            isValid = showError('password', 'passwordError', 'Password is required.');
+        } else if (password.value.length < 6 || password.value.length > 20) {
+            isValid = showError('password', 'passwordError', 'Password must be between 6 and 20 characters.');
+        } 
+
+        // If all validations pass, submit the form
+        if (isValid) {
+            loginForm.submit();
+        }
+
+        // Clear validation messages on input
+        [ 
+            {id: 'usernameEmail', errorId: 'usernameEmailError'},
+            {id: 'password', errorId: 'passwordError'}
+        ].forEach(({id, errorId}) => {
+            const input = document.getElementById(id);
+            input.addEventListener('input', () => {
+                clearValidation(id, errorId);
+            })
+        });
+    });
+}

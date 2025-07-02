@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    <div class="container mt-5">
+    <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-4">
                 <div class="p-4 shadow bg-body rounded border">
@@ -22,25 +22,32 @@
                     </div>
 
                     <form method="POST" action="/login" id="loginForm">
+
                         <div class="input-group mb-1">
-                            <span class="input-group-text" id="username-addon"><i class="bi bi-person"></i></span>
-                            <input id="username" type="text" class="form-control" name="username" placeholder="Username" aria-label="Username" aria-describedby="username-addon  usernameError">
+                            <span class="input-group-text" id="username-email-addon"><i class="bi bi-person-circle"></i></span>
+                            <input id="usernameEmail" type="text" class="form-control" name="usernameEmail" placeholder="Username or email" aria-label="Username or email" aria-describedby="username-email-addon  usernameEmailError">
                         </div>
-                        <p class="text-danger small mb-3" id="usernameError"></p>
+                        <p class="text-danger small mb-3" id="usernameEmailError"></p>
+
                         <div class="input-group mb-1">
                             <span class="input-group-text" id="password-addon"><i class="bi bi-lock"></i></span>
                             <input id="password" type="password" class="form-control" name="password" placeholder="Password" aria-label="Password" aria-describedby="password-addon passwordError">
                             <button class="btn btn-outline-secondary" type="button" id="showPassword"><i class="bi bi-eye"></i></button>
                         </div>
                         <p class="text-danger small mb-3" id="passwordError"></p>
+
                         <div class="d-flex justify-content-center mt-5">
                             <button type="submit" class="btn btn-primary w-100 sora">Login</button>
                         </div>
+
                         <hr class="my-4">
+
                         <div class="text-center mt-3">
                             <p class="sora auth-link">Don't have an account? <a href="/signup">Sign Up</a></p>
                         </div>                   
+
                     </form>
+
                 </div>
             </div>
         </div>

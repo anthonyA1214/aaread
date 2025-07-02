@@ -1,9 +1,52 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    Upload
+    Upload - aaread
 {% endblock %}
 
 {% block main %}
-    
+    <div class="container my-5">
+        <div class="row">
+            <!-- Left: Cover Upload -->
+            <div class="col-12 col-lg-4 mb-3">
+                <div class="bg-body shadow rounded p-4">
+
+                </div>
+            </div>
+
+            <!-- Right: Novel Details -->
+            <div class="col-12 col-lg-8">
+                <div class="bg-body shadow rounded p-4">
+                    <!-- header -->
+                    <div class="text-center text-lg-start">
+                        <p class="sora fs-5 ms-0 ms-lg-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">novel details</p>
+                        <hr class="mx-auto mt-0">
+                    </div>
+
+                    <!-- novel detail inputs here -->
+                    <form method="POST" action="/upload" id="uploadForm">
+                        <!-- title -->
+                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-pd-2 mx-lg-3">
+                            <label for="title" class="form-label h4 sora">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="Untitled novel">
+                        </div>
+
+                        <!-- author -->
+                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-pd-2 mx-lg-3">
+                            <label for="author" class="form-label h4 sora">Author</label>
+                            <input type="text" class="form-control" id="author" name="author" placeholder="Novel author">
+                        </div>
+
+                        <!-- description -->
+                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-pd-2 mx-lg-3">
+                            <label for="description" class="form-label h4 sora">Description</label>
+                            <textarea type="text" class="form-control" id="description" name="description" rows="5"></textarea>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
 {% endblock %}
