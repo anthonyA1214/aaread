@@ -28,3 +28,15 @@ def add_novel():
     
     else:
         return render_template('admin/novels/add.html')
+    
+
+@admin_bp.route('/novels/edit', methods=['GET', 'POST'])
+@admin_required
+def edit_novel():
+    if request.method == 'POST':
+        pass
+
+    else:
+        return render_template('admin/novels/edit.html')
+    
+

@@ -33,6 +33,7 @@ def get_db():
     return db
 
 
+# This is for validating the url before redirecting
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
@@ -48,10 +49,19 @@ def load_user():
     g.user = session.get('user_id') is not None
 
 
+
+# injects the user information to all templates
 @app.context_processor
 def inject_user():
     """Inject the user information into the template context."""
     return dict(is_loggedin=session.get('user_id') is not None, is_admin=session.get('user_role') == 'admin', username=session.get('username'))
+
+
+
+# This function renders a custom 404 error page when a user tries to access a route that doesn't exist
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 @app.route('/')
