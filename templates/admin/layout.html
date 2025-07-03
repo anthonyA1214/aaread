@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        
+        <div class="d-flex align-items-stretch w-100">
+
+            <!-- Sidebar -->
+             <aside id="sidebar" class="bg-body-tertiary d-none d-lg-block border-bottom shadow-sm">
+                <div class="h-100 p-3">
+                    <div class="d-flex align-items-center justify-content-center">
+
+                        <a class="navbar-brand d-flex align-items-end" href="/">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 1024 1024">
+                                <path fill="currentColor" d="M276.992 159.278C280.189 163.327 290.717 198.922 293.116 206.343L320.21 290.136L436.477 646.798L471.706 754.336C478.282 774.411 484.429 794.79 491.783 814.59L458.903 814.61C454.152 798.535 448.486 782.634 443.235 766.712L414.254 678.592L323.441 399.963L295.769 314.442C289.66 295.65 283.286 276.911 277.612 257.984C275.742 259.453 251.353 338.326 247.769 349.52L145.42 665.901L111.727 768.587C106.673 783.962 101.21 799.216 96.4701 814.69C85.6954 814.587 74.209 813.703 63.535 814.982C70.6867 794.586 77.0577 773.778 83.7538 753.22L116.712 652.527L218.75 338.597L260.63 209.011L270.834 177.06C272.686 171.228 274.272 164.751 276.992 159.278Z"/>
+                                <path fill="currentColor" d="M748.652 159.654C750.1 160.645 750.5 161.827 751.131 163.446C757.448 179.643 762.227 196.806 767.615 213.342L799.913 312.853L907.016 641.105L941.864 747.882C949.06 770.082 955.699 792.761 963.926 814.586C953.136 814.551 942.347 814.595 931.558 814.72L749.851 258.261L749.305 258.223C747.09 262.214 746.093 267.606 744.722 272.013C742.142 280.24 739.518 288.453 736.848 296.652L699.474 413.461C656.603 547.453 612.878 681.171 568.3 814.605C557.635 814.56 546.357 813.756 535.77 814.883C541.558 798.513 546.594 781.781 552.037 765.28L595.572 632.094L748.652 159.654Z"/>
+                                <path fill="currentColor" d="M227.537 606.997C238.233 606.828 248.931 606.819 259.627 606.969L300.521 740.616L314.72 787.176C317.497 796.282 319.974 805.634 323.333 814.542L291.727 814.69C288.402 805.355 285.672 795.68 282.699 786.222L263.835 725.078C251.807 685.707 239.187 646.479 227.537 606.997Z"/>
+                                <path fill="currentColor" d="M699.749 606.96C710.31 606.832 720.872 606.84 731.432 606.982L771.262 740.177C778.692 764.955 785.514 789.981 793.335 814.628C783.121 814.099 772.587 814.555 762.343 814.554C757.333 797.043 751.724 779.672 746.474 762.228L699.749 606.96Z"/>
+                            </svg>
+                            <span class="my-1 d-none d-lg-inline ms-1 sora">aaread</span>
+                        </a>
+                    </div>
+
+                    <hr>
+
+                    <!-- sidebar menu -->
+                    
+                    <ul class="nav flex-column">
+                        <!-- home -->
+                        <li class="nav-item">
+                            <a href="{{ url_for('admin.index') }}" class="nav-link sora {% if request.path == '/admin/' %}custom-active{% endif %}" 
+                            {% if request.path.startswith('/admin') %}aria-current="page"{% endif %}>
+                                <i class="bi bi-house me-1"></i> home
+                            </a>
+                        </li>         
+                    
+                        <!-- novel management -->
+                        <li class="nav-item p-0 m-0">
+                            <div class="accordion accordion-flush" id="accordionFlush1">
+                                    <div class="accordion-item bg-body-tertiary">
+                                        <h2 class="accordion-header">                             
+                                            <button class="accordion-button bg-body-tertiary sora {% if not request.path.startswith('/admin/novels') %}collapsed{% endif %}"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="{{ 'true' if request.path.startswith('/admin/novels') else 'false' }}"
+                                            aria-controls="flush-collapseOne">
+                                                manage novels
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseOne" class="accordion-collapse collapse {% if request.path.startswith('/admin/novels') %}show{% endif %}" data-bs-parent="#accordionFlush1">
+                                        <div class="accordion-body p-0">
+                                            <ul class="nav flex-column">
+
+                                                <!-- add novel -->
+                                                <li class="nav-item">
+                                                    <a href="{{ url_for('admin.add_novel') }}" class="nav-link sora text-truncate sidebar-text {% if request.path == '/admin/novels/add' %}custom-active{% endif %}" 
+                                                    {% if request.path.startswith('/admin/novels/add') %}aria-current="page"{% endif %}>
+                                                        <i class="bi bi-plus-lg me-1"></i> add novel
+                                                    </a>                                                   
+                                                </li>
+
+                                                <!-- view / manage novels -->
+                                                <li class="nav-item">
+                                                    <a href="{{ url_for('admin.view_novels') }}" class="nav-link sora text-truncate sidebar-text {% if request.path == '/admin/novels' %}custom-active{% endif %}"
+                                                    {% if request.path.startswith('/admin/novels' ) %}aria-current="page"{% endif %}>
+                                                        <i class="bi bi-book-half me-1"></i> view / manage novels
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>                        
+
+                        <!-- chapter management -->
+                        <li class="nav-item p-0 m-0">
+                            <div class="accordion accordion-flush" id="accordionFlush2">
+                                    <div class="accordion-item bg-body-tertiary">
+                                        <h2 class="accordion-header">                             
+                                            <button class="accordion-button bg-body-tertiary sora {% if not request.path.startswith('/admin/novels') %}collapsed{% endif %}"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="{{ 'true' if request.path.startswith('/admin/novels') else 'false' }}"
+                                            aria-controls="flush-collapseTwo">
+                                                manage chapters
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseTwo" class="accordion-collapse collapse {% if request.path.startswith('/admin/novels') %}show{% endif %}" data-bs-parent="#accordionFlush2">
+                                        <div class="accordion-body p-0">
+                                            <ul class="nav flex-column">
+
+                                                <!-- add chapters -->
+                                                <li class="nav-item">
+                                                    <a href="{{ url_for('admin.add_novel') }}" class="nav-link sora text-truncate sidebar-text {% if request.path == '/admin/novels/add' %}custom-active{% endif %}" 
+                                                    {% if request.path.startswith('/admin/novels/add') %}aria-current="page"{% endif %}>
+                                                        <i class="bi bi-plus-lg me-1"></i> add chapter
+                                                    </a>                                                   
+                                                </li>
+
+                                                <!-- view / manage chapters -->
+                                                <li class="nav-item">
+                                                    <a href="{{ url_for('admin.view_novels') }}" class="nav-link sora text-truncate sidebar-text {% if request.path == '/admin/novels' %}custom-active{% endif %}"
+                                                    {% if request.path.startswith('/admin/novels' ) %}aria-current="page"{% endif %}>
+                                                        <i class="bi bi-book-half me-1"></i> view / manage chapters
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li> 
+
+                        <!-- genre management -->
+                        <li class="nav-item p-0 m-0">
+                            <div class="accordion accordion-flush" id="accordionFlush3">
+                                    <div class="accordion-item bg-body-tertiary">
+                                        <h2 class="accordion-header">                             
+                                            <button class="accordion-button bg-body-tertiary sora {% if not request.path.startswith('/admin/novels') %}collapsed{% endif %}"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="{{ 'true' if request.path.startswith('/admin/novels') else 'false' }}"
+                                            aria-controls="flush-collapseThree">
+                                                manage genres
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseThree" class="accordion-collapse collapse {% if request.path.startswith('/admin/novels') %}show{% endif %}" data-bs-parent="#accordionFlush3">
+                                        <div class="accordion-body p-0">
+                                            <ul class="nav flex-column">
+
+                                                <!-- add genre -->
+                                                <li class="nav-item">
+                                                    <a href="{{ url_for('admin.add_novel') }}" class="nav-link sora text-truncate sidebar-text {% if request.path == '/admin/novels/add' %}custom-active{% endif %}" 
+                                                    {% if request.path.startswith('/admin/novels/add') %}aria-current="page"{% endif %}>
+                                                        <i class="bi bi-plus-lg me-1"></i> add genre
+                                                    </a>                                                   
+                                                </li>
+
+                                                <!-- view / manage genre -->
+                                                <li class="nav-item">
+                                                    <a href="{{ url_for('admin.view_novels') }}" class="nav-link sora text-truncate sidebar-text {% if request.path == '/admin/novels' %}custom-active{% endif %}"
+                                                    {% if request.path.startswith('/admin/novels' ) %}aria-current="page"{% endif %}>
+                                                        <i class="bi bi-book-half me-1"></i> view / manage genres
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>         
+                </div>
+            </aside>
+
+            <!-- offcanvas -->
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasShow" aria-labelledby="offcanvasShowLabel">
+                <div class="offcanvas-header border-bottom">
+                    <div class="d-flex align-items-center justify-content-center offcanvas-title">
+
+                        <a class="navbar-brand d-flex align-items-end" href="/">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 1024 1024">
+                                <path fill="currentColor" d="M276.992 159.278C280.189 163.327 290.717 198.922 293.116 206.343L320.21 290.136L436.477 646.798L471.706 754.336C478.282 774.411 484.429 794.79 491.783 814.59L458.903 814.61C454.152 798.535 448.486 782.634 443.235 766.712L414.254 678.592L323.441 399.963L295.769 314.442C289.66 295.65 283.286 276.911 277.612 257.984C275.742 259.453 251.353 338.326 247.769 349.52L145.42 665.901L111.727 768.587C106.673 783.962 101.21 799.216 96.4701 814.69C85.6954 814.587 74.209 813.703 63.535 814.982C70.6867 794.586 77.0577 773.778 83.7538 753.22L116.712 652.527L218.75 338.597L260.63 209.011L270.834 177.06C272.686 171.228 274.272 164.751 276.992 159.278Z"/>
+                                <path fill="currentColor" d="M748.652 159.654C750.1 160.645 750.5 161.827 751.131 163.446C757.448 179.643 762.227 196.806 767.615 213.342L799.913 312.853L907.016 641.105L941.864 747.882C949.06 770.082 955.699 792.761 963.926 814.586C953.136 814.551 942.347 814.595 931.558 814.72L749.851 258.261L749.305 258.223C747.09 262.214 746.093 267.606 744.722 272.013C742.142 280.24 739.518 288.453 736.848 296.652L699.474 413.461C656.603 547.453 612.878 681.171 568.3 814.605C557.635 814.56 546.357 813.756 535.77 814.883C541.558 798.513 546.594 781.781 552.037 765.28L595.572 632.094L748.652 159.654Z"/>
+                                <path fill="currentColor" d="M227.537 606.997C238.233 606.828 248.931 606.819 259.627 606.969L300.521 740.616L314.72 787.176C317.497 796.282 319.974 805.634 323.333 814.542L291.727 814.69C288.402 805.355 285.672 795.68 282.699 786.222L263.835 725.078C251.807 685.707 239.187 646.479 227.537 606.997Z"/>
+                                <path fill="currentColor" d="M699.749 606.96C710.31 606.832 720.872 606.84 731.432 606.982L771.262 740.177C778.692 764.955 785.514 789.981 793.335 814.628C783.121 814.099 772.587 814.555 762.343 814.554C757.333 797.043 751.724 779.672 746.474 762.228L699.749 606.96Z"/>
+                            </svg>
+                            <span class="my-1 d-inline d-lg-none ms-1 sora">aaread</span>
+                        </a>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+
+                    <!-- sidebar menu -->
+                    
+                    <ul class="nav flex-column">
+                        <!-- home -->
+                        <li class="nav-item">
+                            <a href="{{ url_for('admin.index') }}" class="nav-link sora {% if request.path == '/admin/' %}custom-active{% endif %}" 
+                            {% if request.path.startswith('/admin') %}aria-current="page"{% endif %}>
+                                <i class="bi bi-house me-1"></i> home
+                            </a>
+                        </li>         
+                    
+                        <!-- novel management -->
+                        <li class="nav-item p-0 m-0">
+                            <div class="accordion accordion-flush" id="accordionFlush1">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">                             
+                                            <button class="accordion-button bg-body sora {% if not request.path.startswith('/admin/novels') %}collapsed{% endif %}"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="{{ 'true' if request.path.startswith('/admin/novels') else 'false' }}"
+                                            aria-controls="flush-collapseOne">
+                                                manage novels
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseOne" class="accordion-collapse collapse {% if request.path.startswith('/admin/novels') %}show{% endif %}" data-bs-parent="#accordionFlush1">
+                                        <div class="accordion-body p-0">
+                                            <ul class="nav flex-column">
+
+                                                <!-- add novel -->
+                                                <li class="nav-item">
+                                                    <a href="{{ url_for('admin.add_novel') }}" class="nav-link sora text-truncate sidebar-text {% if request.path == '/admin/novels/add' %}custom-active{% endif %}" 
+                                                    {% if request.path.startswith('/admin/novels/add') %}aria-current="page"{% endif %}>
+                                                        <i class="bi bi-plus-lg me-1"></i> add novel
+                                                    </a>                                                   
+                                                </li>
+
+                                                <!-- view / manage novels -->
+                                                <li class="nav-item">
+                                                    <a href="{{ url_for('admin.view_novels') }}" class="nav-link sora text-truncate sidebar-text {% if request.path == '/admin/novels' %}custom-active{% endif %}"
+                                                    {% if request.path.startswith('/admin/novels' ) %}aria-current="page"{% endif %}>
+                                                        <i class="bi bi-book-half me-1"></i> view / manage novels
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>                        
+
+                        <!-- chapter management -->
+                        <li class="nav-item p-0 m-0">
+                            <div class="accordion accordion-flush" id="accordionFlush2">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">                             
+                                            <button class="accordion-button bg-body sora {% if not request.path.startswith('/admin/novels') %}collapsed{% endif %}"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="{{ 'true' if request.path.startswith('/admin/novels') else 'false' }}"
+                                            aria-controls="flush-collapseTwo">
+                                                manage chapters
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseTwo" class="accordion-collapse collapse {% if request.path.startswith('/admin/novels') %}show{% endif %}" data-bs-parent="#accordionFlush2">
+                                        <div class="accordion-body p-0">
+                                            <ul class="nav flex-column">
+
+                                                <!-- add chapters -->
+                                                <li class="nav-item">
+                                                    <a href="{{ url_for('admin.add_novel') }}" class="nav-link sora text-truncate sidebar-text {% if request.path == '/admin/novels/add' %}custom-active{% endif %}" 
+                                                    {% if request.path.startswith('/admin/novels/add') %}aria-current="page"{% endif %}>
+                                                        <i class="bi bi-plus-lg me-1"></i> add chapter
+                                                    </a>                                                   
+                                                </li>
+
+                                                <!-- view / manage chapters -->
+                                                <li class="nav-item">
+                                                    <a href="{{ url_for('admin.view_novels') }}" class="nav-link sora text-truncate sidebar-text {% if request.path == '/admin/novels' %}custom-active{% endif %}"
+                                                    {% if request.path.startswith('/admin/novels' ) %}aria-current="page"{% endif %}>
+                                                        <i class="bi bi-book-half me-1"></i> view / manage chapters
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li> 
+
+                        <!-- genre management -->
+                        <li class="nav-item p-0 m-0">
+                            <div class="accordion accordion-flush" id="accordionFlush3">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">                             
+                                            <button class="accordion-button bg-body sora {% if not request.path.startswith('/admin/novels') %}collapsed{% endif %}"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="{{ 'true' if request.path.startswith('/admin/novels') else 'false' }}"
+                                            aria-controls="flush-collapseThree">
+                                                manage genres
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseThree" class="accordion-collapse collapse {% if request.path.startswith('/admin/novels') %}show{% endif %}" data-bs-parent="#accordionFlush3">
+                                        <div class="accordion-body p-0">
+                                            <ul class="nav flex-column">
+
+                                                <!-- add genre -->
+                                                <li class="nav-item">
+                                                    <a href="{{ url_for('admin.add_novel') }}" class="nav-link sora text-truncate sidebar-text {% if request.path == '/admin/novels/add' %}custom-active{% endif %}" 
+                                                    {% if request.path.startswith('/admin/novels/add') %}aria-current="page"{% endif %}>
+                                                        <i class="bi bi-plus-lg me-1"></i> add genre
+                                                    </a>                                                   
+                                                </li>
+
+                                                <!-- view / manage genre -->
+                                                <li class="nav-item">
+                                                    <a href="{{ url_for('admin.view_novels') }}" class="nav-link sora text-truncate sidebar-text {% if request.path == '/admin/novels' %}custom-active{% endif %}"
+                                                    {% if request.path.startswith('/admin/novels' ) %}aria-current="page"{% endif %}>
+                                                        <i class="bi bi-book-half me-1"></i> view / manage genres
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+             <div class="main d-flex flex-column min-vh-100 w-100 overflow-hidden">
+                <!-- navigation bar -->
+                <nav class="navbar navbar-expand px-3 border-bottom bg-body-tertiary">
+                    <!-- Button for sidebar toggle -->
+                    <button class="btn btn-lg d-none d-lg-inline-block border-0" type="button" id="sidebarCollapse">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <!-- button for offcanvas toggle -->
+                    <button class="btn btn-lg d-inline-block d-lg-none border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasShow" aria-controls="offcanvasShow">
+                        <i class="bi bi-justify-left"></i>
+                    </button>
+
+                    <!-- right side buttons -->
+                    <div class="d-flex align-items-end ms-auto order-lg-2">
+                        <!-- Toggle dark light mode -->
+                        <button class="btn btn-outline-secondary ms-2" id="themeToggle">
+                            <i class="bi bi-moon-stars-fill"></i> 
+                        </button>
+
+                        {% if is_loggedin %}
+                            <!-- user dropdown -->
+                            <div class="position-relative d-inline-block">
+                                <button class="btn btn-outline-secondary ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#userDropdown" aria-expanded="false" aria-controls="userDropdown">
+                                    <i class="bi bi-person-fill"></i>
+                                </button>
+
+                                <div class="collapse position-absolute end-0 mt-2" id="userDropdown" style="width: 250px; z-index: 1100;">
+                                    <div class="card card-body">
+                                        <ul class="list-unstyled mb-0">
+                                            <li><h5 class="fw-semibold mb-2 sora">Howdy, {{ username }}! 👋</h5></li>
+                                            <hr class="my-2">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="sora">Role:</span>
+                                                <span class="badge bg-secondary">{{ 'Admin' if is_admin else 'User' }}</span>
+                                            </div>
+                                            <hr class="my-2">
+                                            <li>
+                                                <a class="btn btn-outline-primary w-100 sora my-1" href="/settings">
+                                                    <i class="bi bi-gear-fill"></i> Settings
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="btn btn-outline-danger w-100 sora my-1" href="{{ url_for('logout', next=request.path) }}">
+                                                    <i class="bi bi-box-arrow-right"></i> Log Out
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                    </div>
+                </nav>
+                <main class="content p-3">
+                    <div class="container-fluid">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati praesentium veritatis, voluptatem minus, facilis maiores architecto neque quis minima dolorem ducimus, id aut assumenda alias aliquam aspernatur autem doloremque officiis?</p>
+                    </div>
+                </main>
+             </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+        {% block script %}{% endblock %}
+    </body>
+</html>

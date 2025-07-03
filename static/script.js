@@ -1,6 +1,14 @@
 htmlTag = document.documentElement;
 themeToggle = document.getElementById("themeToggle");
 
+const toggler = document.getElementById('sidebarCollapse');
+
+if (toggler) {
+    toggler.addEventListener('click', () => {
+        document.querySelector('#sidebar').classList.toggle('collapsed')
+    });
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     // Check for saved theme in localStorage
     const savedTheme = localStorage.getItem("theme");

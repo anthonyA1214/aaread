@@ -5,12 +5,14 @@ from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
 from email_validator import validate_email, EmailNotValidError
 from urllib.parse import urljoin, urlparse
+from routes.admin import admin_bp
 import sqlite3
 
-from auth import login_required, admin_required
+from helpers import login_required, admin_required
 
 # Configure the Flask application
 app = Flask(__name__)
+app.register_blueprint(admin_bp)
 
 PRIVATE_PATHS = ['/library', '/upload']
 
@@ -56,7 +58,7 @@ def inject_user():
 def index():
     """Render the index page."""
 
-    return render_template('index.html')
+    return render_template('public/index.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -71,7 +73,7 @@ def login():
 
         if not usernameEmail or not password:
             flash("Username (or email) and password are required.", "danger")
-            return render_template('login.html')
+            return render_template('public/login.html')
         
         # Connect to the database
         db = get_db()
@@ -84,7 +86,7 @@ def login():
         # Check if the user exists and if the password matches
         if user is None or not check_password_hash(user['hashed_password'], password):
             flash("Invalid username (or email) or password.", "danger")
-            return render_template('login.html')
+            return render_template('public/login.html')
         
         # Store user information in the session
         session['user_id'] = user['id']
@@ -108,7 +110,7 @@ def login():
         
         session.clear()  # Clear the session to ensure no previous session data is present
 
-        return render_template('login.html')
+        return render_template('public/login.html')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -139,7 +141,7 @@ def signup():
             # If there are validation errors, flash them and render the signup page again
             for err in errors:
                 flash(err, "danger")
-            return render_template('signup.html')
+            return render_template('public/signup.html')
 
         try:
             # Validate the email address
@@ -147,28 +149,28 @@ def signup():
             email = valid_email.normalized  # Get the normalized email address
         except EmailNotValidError as e:
             flash(f"Invalid email: {e}", "danger")
-            return render_template('signup.html')
+            return render_template('public/signup.html')
 
         if len(username) < 3 and len(username) > 20:
             flash("Username must be between 3 and 20 characters.", "danger")
-            return render_template('signup.html')
+            return render_template('public/signup.html')
         
         if not username.isalnum():
             flash("Username must be alphanumeric.", "danger")
-            return render_template('signup.html')
+            return render_template('public/signup.html')
         
         if len(password) < 6 and len(password) > 20:
             flash("Password must be between 6 and 20 characters.", "danger")
-            return render_template('signup.html')
+            return render_template('public/signup.html')
         
         if len(confirm_password) < 6:
             flash("Password confirmation must be at least 6 characters long.", "danger")
-            return render_template('signup.html')
+            return render_template('public/signup.html')
                 
         # Check if the username already exists (this is a placeholder, replace with actual database check)
         if password != confirm_password:
             flash("Passwords do not match.", "danger")
-            return render_template('signup.html')
+            return render_template('public/signup.html')
         
         # Connect to the database and check if the username or email already exists
         db = get_db()
@@ -179,7 +181,7 @@ def signup():
 
         if existing_user:
             flash("Username or email already exists.", "danger")
-            return render_template('signup.html')
+            return render_template('public/signup.html')
 
         # Here you would typically save the user to a database
         # Save the user with email, username, and hashed_password to the database
@@ -195,7 +197,7 @@ def signup():
         flash("Signup successful! Please log in.", "success")
         return redirect('/login')
     else:
-        return render_template('signup.html')
+        return render_template('public/signup.html')
     
 @app.route('/logout')
 @login_required
@@ -227,14 +229,14 @@ def novels():
     else:
         # For now, just render the novels page
         # In a real application, you would pass the list of novels to the template
-        return render_template('novels.html')
+        return render_template('public/novels.html')
 
 @app.route('/library')
 @login_required
 def library():
     """Display the user's library."""
     # Here you would typically fetch the user's library from a database
-    return render_template('library.html')
+    return render_template('public/library.html')
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -248,11 +250,7 @@ def upload():
         return render_template('upload.html')
     
 
-@app.route('/admin')
-@admin_required
-def admin():
-    """Admin panel."""
-    return render_template('admin/admin_index.html')
+
 
 
 if __name__ == '__main__':
