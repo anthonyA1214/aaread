@@ -100,11 +100,13 @@ path {
 /* ========== sidebar ========== */
 
 #sidebar {
+  position: fixed;
   max-width: 250px;
   min-width: 250px;
   height: 100vh; /* Full viewport height */
   transition: margin-left 0.35s ease-in-out;
-  z-index: 1111;
+  z-index: 1030 !important;
+  
 }
 
 #sidebar.collapsed {
@@ -112,8 +114,24 @@ path {
 }
 
 .main {
+  margin-left: 250px !important;
   flex: 1;
   transition: margin-left 0.35s ease-in-out;
+}
+
+.main.expanded {
+  margin-left: 0 !important;
+}
+
+@media (max-width: 991.98px) {
+  .main {
+    margin-left: 0 !important;
+    transition: none;
+  }
+
+  #sidebar {
+    display: none;
+  }
 }
 
 /* ========== sidebar active ========== */
@@ -145,4 +163,9 @@ path {
 
 .offcanvas .sidebar-text {
   max-width: none;
+}
+
+.col-actions {
+    width: 1%;
+    white-space: nowrap;
 }
