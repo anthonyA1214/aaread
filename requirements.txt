@@ -2,3 +2,5 @@ email-validator
 Flask
 Flask-Session
 Flask-SQLAlchemy
+Flask-Migrate
+python-dotenv

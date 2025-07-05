@@ -2,15 +2,23 @@ import os
 
 from flask import Flask, render_template, redirect, request, session, g, flash, get_flashed_messages
 from flask_session import Session
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_migrate import Migrate
 from email_validator import validate_email, EmailNotValidError
 from urllib.parse import urlparse
 
 from routes.admin import admin_bp
-from helpers import login_required, get_db, is_safe_url
+from helpers import login_required, is_safe_url
+
+from models import db
+from models.user import User
 
 # Configure the Flask application
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db.init_app(app)
+migrate = Migrate(app, db)
 app.register_blueprint(admin_bp)
 
 PUBLIC_PATHS = ["/", "/novels"]
@@ -23,6 +31,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_PERMANENT"] = False
 Session(app)
 
+# You may need to create tables on startup to avoid errors
+with app.app_context():
+    db.create_all()
 
 @app.before_request
 def load_user():
@@ -53,27 +64,24 @@ def index():
 def login():
     """Handle user login."""
     if request.method == "POST":
-        usernameEmail = request.form["usernameEmail"]
+        username_email = request.form["username_email"]
         password = request.form["password"]
 
-        if not usernameEmail or not password:
+        if not username_email or not password:
             flash("Username (or email) and password are required.", "danger")
             return render_template("public/login.html")
 
-        db = get_db()
-        cursor = db.cursor()
-        user = cursor.execute(
-            "SELECT * FROM users WHERE username = ? OR email = ?", (usernameEmail, usernameEmail)
-        ).fetchone()
-        db.close()
+        user = User.query.filter(
+            (User.username == username_email) | (User.email == username_email)
+        ).first()
 
-        if user is None or not check_password_hash(user["hashed_password"], password):
+        if user is None or not user.check_password(password):
             flash("Invalid username (or email) or password.", "danger")
             return render_template("public/login.html")
 
-        session["user_id"] = user["id"]
-        session["username"] = user["username"]
-        session["user_role"] = user["role"]
+        session["user_id"] = user.id
+        session["username"] = user.username
+        session["user_role"] = user.role
         flash("Login successful!", "success")
         return redirect("/")
 
@@ -148,23 +156,23 @@ def signup():
             flash("Passwords do not match.", "danger")
             return render_template("public/signup.html")
 
-        db = get_db()
-        cursor = db.cursor()
-        existing_user = cursor.execute(
-            "SELECT * FROM users WHERE username = ? OR email = ?", (username, email)
-        ).fetchone()
+        existing_user = User.query.filter(
+            (User.username == username) | (User.email == email)
+        ).first()
 
         if existing_user:
             flash("Username or email already exists.", "danger")
             return render_template("public/signup.html")
 
-        hashed_password = generate_password_hash(password)
-        cursor.execute(
-            "INSERT INTO users (email, username, hashed_password) VALUES (?, ?, ?)",
-            (email, username, hashed_password)
+        new_user = User(
+            email=email,
+            username=username
         )
-        db.commit()
-        db.close()
+
+        new_user.set_password(password)
+
+        db.session.add(new_user)
+        db.session.commit()
 
         flash("Signup successful! Please log in.", "success")
         return redirect("/login")

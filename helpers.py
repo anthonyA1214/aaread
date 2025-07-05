@@ -21,15 +21,6 @@ def admin_required(f):
     return decorated_function
 
 
-def get_db():
-    """Connect to the SQLite database."""
-    db = getattr(g, "_database", None)
-    if db is None:
-        db = g._database = sqlite3.connect("app.db")
-        db.row_factory = sqlite3.Row
-    return db
-
-
 def is_safe_url(target):
     """Check if the target URL is safe for redirection."""
     ref_url = urlparse(request.host_url)

@@ -10,3 +10,5 @@ log.sql
 
 # flask session files
 flask_session/
+
+instance/

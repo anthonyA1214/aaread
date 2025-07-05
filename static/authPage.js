@@ -132,22 +132,22 @@ if (loginForm) {
         
         event.preventDefault(); // Prevent the form from submitting immediately
         
-        const usernameEmail = document.getElementById('usernameEmail');
+        const username_email = document.getElementById('username_email');
         const password = document.getElementById('password');
 
         let isValid = true;
 
         // Clear previous error messages
-        clearValidation('usernameEmail', 'usernameEmailError');
+        clearValidation('username_email', 'username_emailError');
         clearValidation('password', 'passwordError');
 
         // Validate username/email
-        if (!usernameEmail.value.trim()) {
-            isValid = showError('usernameEmail', 'usernameEmailError', 'Username or email is required.');
-        } else if (usernameEmail.value.length < 3) {
-            isValid = showError('usernameEmail', 'usernameEmailError', 'Username or email must be at least 3 characters long.');
-        } else if (!/^[a-zA-Z0-9@.]+$/.test(usernameEmail.value)) {
-            isValid = showError('usernameEmail', 'usernameEmailError', 'Username or email must be alphanumeric or contain @ and .');
+        if (!username_email.value.trim()) {
+            isValid = showError('username_email', 'username_emailError', 'Username or email is required.');
+        } else if (username_email.value.length < 3) {
+            isValid = showError('username_email', 'username_emailError', 'Username or email must be at least 3 characters long.');
+        } else if (!/^[a-zA-Z0-9@.]+$/.test(username_email.value)) {
+            isValid = showError('username_email', 'username_emailError', 'Username or email must be alphanumeric or contain @ and .');
         } 
 
         // Validate password
@@ -164,7 +164,7 @@ if (loginForm) {
 
         // Clear validation messages on input
         [ 
-            {id: 'usernameEmail', errorId: 'usernameEmailError'},
+            {id: 'username_email', errorId: 'username_emailError'},
             {id: 'password', errorId: 'passwordError'}
         ].forEach(({id, errorId}) => {
             const input = document.getElementById(id);

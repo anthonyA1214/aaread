@@ -1,5 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from helpers import admin_required, get_db, is_safe_url
+from helpers import admin_required, is_safe_url
+
+from models import db
+from models.genre import Genre
 
 # create the admin blueprint
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
@@ -78,13 +81,7 @@ def delete_chapter(novel_id):
 @admin_bp.route("/genres")
 @admin_required
 def view_genres():
-    db = get_db()
-    cursor = db.cursor()
-    genres = cursor.execute(
-        "SELECT * FROM genres"
-    ).fetchall()
-    
-    db.close()
+    genres = Genre.query.all()
 
     return render_template("admin/genres/list.html", genres=genres)
 
@@ -99,22 +96,18 @@ def add_genre():
             flash("Genre name is required", "danger")
             return render_template("admin/genres/list.html")
 
-        db = get_db()
-        cursor = db.cursor()
-
-        existing_genre = cursor.execute(
-            "SELECT name FROM genres WHERE name = ?", (addGenreName,)
-        ).fetchone()
+        existing_genre = Genre.query.filter(
+            (Genre.name == addGenreName)
+        ).first()
 
         if existing_genre:
             flash("Genre name already exists.", "danger")
             return redirect(url_for("admin.view_genres"))
         
-        cursor.execute(
-            "INSERT INTO genres (name) VALUES (?)", (addGenreName,)
-        )
-        db.commit()
-        db.close()
+        new_genre = Genre(name=addGenreName)
+
+        db.session.add(new_genre)
+        db.session.commit()
 
         flash("Genre added succesfully!", "success")
         return redirect(url_for("admin.view_genres"))
@@ -130,22 +123,18 @@ def edit_genre(genre_id):
             flash("Genre name is required", "danger")
             return render_template("admin/genres/list.html")
         
-        db = get_db()
-        cursor = db.cursor()
-
-        existing_genre = cursor.execute(
-            "SELECT name FROM genres WHERE name = ?", (editGenreName,)
-        ).fetchone()
+        existing_genre = Genre.query.filter(
+            (Genre.name == editGenreName)
+        ).first()
 
         if existing_genre:
             flash("Genre name already exists.", "danger")
             return render_template("admin/genres/list.html") 
         
-        cursor.execute(
-            "UPDATE genres SET name = ? WHERE id = ?", (editGenreName, genre_id)
-        )
-        db.commit()
-        db.close()
+        genre = Genre.query.get_or_404(genre_id)
+        genre.name = editGenreName
+
+        db.session.commit()
 
         flash("Genre updated succesfully!", "success")
         return redirect(url_for("admin.view_genres"))
