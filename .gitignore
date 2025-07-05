@@ -1,14 +1,11 @@
-# Python Virtual Environment
-venv/
-
-# Python cache files
+# Python
 __pycache__/
 *.pyc
-
-# database query .schema
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+venv/
 log.sql
-
 # flask session files
 flask_session/
-
-instance/

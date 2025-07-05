@@ -27,10 +27,10 @@ def view_novels():
 @admin_bp.route("/novels/add", methods=["GET", "POST"])
 @admin_required
 def add_novel():
-    if request.method == "POST":
-        pass
-    else:
-        return render_template("admin/novels/add.html")
+        if request.method == "POST":
+            pass
+        else:
+            return render_template("admin/novels/add.html")
     
 
 @admin_bp.route("/novels/<int:novel_id>/edit", methods=["GET", "POST"])
@@ -81,9 +81,18 @@ def delete_chapter(novel_id):
 @admin_bp.route("/genres")
 @admin_required
 def view_genres():
-    genres = Genre.query.all()
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    search = request.args.get('search', '')
 
-    return render_template("admin/genres/list.html", genres=genres)
+    query = Genre.query
+    if search:
+        query = query.filter(Genre.name.ilike(f"%{search}%"))
+
+    pagination = query.order_by(Genre.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+    genres = pagination.items
+
+    return render_template("admin/genres/list.html", genres=genres, pagination=pagination)
 
 
 @admin_bp.route("/genres/add", methods=["POST"])
