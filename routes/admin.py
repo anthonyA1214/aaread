@@ -1,8 +1,20 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
-from helpers import admin_required, is_safe_url
+import os
+
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from helpers import admin_required
+from datetime import datetime
+from werkzeug.utils import secure_filename
 
 from models import db
 from models.genre import Genre
+from models.novel import Novel
+
+# the first argument is the location of the second argument will be saved be it file or folder
+UPLOAD_FOLDER = os.path.join("static", "uploads")
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # create the admin blueprint
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
@@ -21,6 +33,8 @@ def index():
 @admin_bp.route("/novels")
 @admin_required
 def view_novels():
+    
+
     return render_template("admin/novels/list.html")
 
 
@@ -28,7 +42,49 @@ def view_novels():
 @admin_required
 def add_novel():
         if request.method == "POST":
-            pass
+            title = request.form.get("title")
+            description = request.form.get("description")
+            status = request.form.get("status")
+            author = request.form.get("author")
+            released = request.form.get("released")
+            posted_by = session.get("user_id")  
+
+            if not title:
+                flash("Title is required.", "danger")
+                return redirect(request.url)
+
+            today = datetime.today()
+            posted_on = today.strftime("%B %d, %Y")
+
+            file = request.files.get("cover_image")
+            cover_filename = None
+
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                cover_filename = f"{title.replace(" ", "_")}_{filename}"
+                save_path = os.path.join(UPLOAD_FOLDER, cover_filename)
+
+                # Creates a folder if doesnt exit yet
+                os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+                file.save(save_path)
+
+            new_novel = Novel(
+                title=title,
+                description=description,
+                status=status,
+                author=author,
+                released=released,
+                posted_by=posted_by,
+                posted_on=posted_on,
+                cover_image=os.path.join("uploads", cover_filename) if cover_filename else None
+            )
+            db.session.add(new_novel)
+            db.session.commit()
+
+            flash("Novel added successfully!", "success")
+            return redirect(url_for("admin.view_novels"))
+
         else:
             return render_template("admin/novels/add.html")
     

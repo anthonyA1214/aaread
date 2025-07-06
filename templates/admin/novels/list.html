@@ -11,6 +11,66 @@
             <i class="bi bi-plus"></i> Add New
         </a>
     </div>
-
+    
     <hr class="mx-auto mt-0 mb-3">
+
+    <div class="container">
+        <form method="get" action="{{ url_for('admin.view_novels') }}">
+            <div class="row mb-3">
+                <div class="bg-body rounded shadow p-3">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
+                        
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row mb-3">
+            <div class="bg-body rounded shadow p-3">
+                
+                <div class="row px-3">
+                    <table class="table table-hover">
+
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Author</th>
+                                <th scope="col">Released</th>
+                                <th scope="col">Posted by</th>
+                                <th scope="col">Posted on</th>
+                                <th scope="col">Updated on</th>
+                                <th scope="col">View Count</th>
+                                <th scope="col" class="col-actions"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- {% for novel in novels %}
+                                <tr>
+                                    <th scope="col">{{ novel['id'] }}</th>
+                                    <td>{{ novel['title'] }}</td>    
+                                    <td>{{ novel['status'] }}</td>
+                                    <td>{{ novel['author'] }}</td>
+                                    <td>{{ novel['released'] }}</td>
+                                    <td></td>
+                                    <td>{{ novel['posted_on'] }}</td>
+                                    <td>{{ novel['updated_on'] }}</td>
+                                    <td>{{ novel['view_count'] }}</td>
+                                    <td>
+                                        <button class="btn btn-sm border-0" data-bs-toggle="modal" data-bs-target="#editGenre" data-id="{{ genre['id'] }}" data-name="{{ genre['name'] }}">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %} -->
+                        </tbody>
+
+                    </table>
+                </div>
+            
+            </div>
+        </div>
+    </div>
+
+    <!-- contents -->
 {% endblock %}

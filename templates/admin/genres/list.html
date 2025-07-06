@@ -64,7 +64,7 @@
             </div>
         </div>
 
-    <!-- -->
+    <!-- contents -->
     <div class="container">
         <form method="get" action="{{ url_for('admin.view_genres') }}">
             <div class="row mb-3">
@@ -111,7 +111,7 @@
                         <tbody>
                             {% for genre in genres %}
                                 <tr>
-                                    <th scope="1">{{ genre['id'] }}</th>
+                                    <th scope="col">{{ genre['id'] }}</th>
                                     <td>{{ genre['name'] }}</td>
                                     <td>
                                         <button class="btn btn-sm border-0" data-bs-toggle="modal" data-bs-target="#editGenre" data-id="{{ genre['id'] }}" data-name="{{ genre['name'] }}">

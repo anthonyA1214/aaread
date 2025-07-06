@@ -13,49 +13,85 @@
     </div>
 
     <hr class="mx-auto mt-0 mb-3">
+    <form method="POST" action="{{ url_for('admin.add_novel') }}" enctype="multipart/form-data" id="uploadForm">
+        <div class="container">
+            <div class="row">
+                <!-- Left: Cover Upload -->
+                <div class="col-12 col-lg-4 mb-3">
+                    <div class="bg-body shadow rounded p-4">
+                        <label for="coverInput" class="d-block" style="aspect-ratio: 2/3; cursor: pointer; position: relative;">
+                            <!-- Preview Image -->
+                            <img id="coverPreview" src="{{ url_for('static', filename='images/placeholders.png') }}" alt="Cover Preview" class="rounded object-fit-cover w-100 h-100 position-absolute top-0 start-0" style="z-index: 0; display: none;">
 
-    <div class="container">
-        <div class="row">
-            <!-- Left: Cover Upload -->
-            <div class="col-12 col-lg-4 mb-3">
-                <div class="bg-body shadow rounded p-4">
+                            <div id="placeholder" class="rounded w-100 h-100 flex-column justify-content-center align-items-center text-center position-relative border bg-body-tertiary" style="z-index: 1; display: flex;">
+                                <i class="bi bi-image fs-1 text-muted"></i>
+                                <p class="text-muted mb-0">Click to upload cover</p>
+                            </div>
 
-                </div>
-            </div>
-
-            <!-- Right: Novel Details -->
-            <div class="col-12 col-lg-8">
-                <div class="bg-body shadow rounded p-4">
-                    <!-- header -->
-                    <div class="text-center text-lg-start">
-                        <p class="sora fs-5 ms-0 ms-lg-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Novel Details</p>
-                        <hr class="mx-auto mt-0">
+                            <input type="file" id="coverInput" name="cover_image" accept="image/*" enctype="multipart/form-data" class="d-none" onchange="previewCover(event)">
+                        </label>
                     </div>
+                </div>
 
-                    <!-- novel detail inputs here -->
-                    <form method="POST" action="/upload" id="uploadForm">
+                <!-- Right: Novel Details -->
+                <div class="col-12 col-lg-8">
+                    <div class="bg-body shadow rounded p-4">
+                        <!-- header -->
+                        <div class="text-center text-lg-start">
+                            <p class="sora fs-5 ms-0 ms-lg-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Novel Details</p>
+                            <hr class="mx-auto mt-0">
+                        </div>
+
+                        <!-- novel detail inputs here -->
                         <!-- title -->
-                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-pd-2 mx-lg-3">
+                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-d-2 mx-lg-3">
                             <label for="title" class="form-label h4 sora">Title</label>
                             <input type="text" class="form-control" id="title" name="title" placeholder="Untitled novel">
                         </div>
 
+                        <!-- status -->
+                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-d-2 mx-lg-3">
+                            <label for="status" class="form-label h4 sora">Status</label>
+                            <select class="form-select" aria-label="status" id="status" name="status">
+                                <option value="Ongoing" selected>Ongoing</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Hiatus">Hiatus</option>
+                                <option value="Dropped">Dropped</option>
+                            </select>
+                        </div>
+
                         <!-- author -->
-                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-pd-2 mx-lg-3">
+                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3">
                             <label for="author" class="form-label h4 sora">Author</label>
                             <input type="text" class="form-control" id="author" name="author" placeholder="Novel author">
                         </div>
 
                         <!-- description -->
-                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-pd-2 mx-lg-3">
+                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3">
                             <label for="description" class="form-label h4 sora">Description</label>
                             <textarea type="text" class="form-control" id="description" name="description" rows="5"></textarea>
                         </div>
 
-                    </form>
-                </div>
-            </div>
+                        <!-- released year -->
+                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3">
+                            <label for="released" class="form-label h4 sora">Released Year</label>
+                            <input type="number" class="form-control" id="released" name="released" placeholder="e.g. 2024">
+                        </div>
 
+                        <div class="text-end px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3 py-3">
+                            <button type="submit" class="btn btn-primary sora">
+                                <i class="bi bi-plus-circle"></i> Add Novel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div>
+    </form>
 {% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='cover.js') }}"></script>
+{% endblock %}
+
