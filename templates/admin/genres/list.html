@@ -84,7 +84,7 @@
                         <div class="w-100" style="max-width: 250px;">
                             <label for="searchInput" class="form-label">Search Genres</label>
                             <div class="input-group">
-                                <span class="input-group-text" id="username-email-addon"><i class="bi bi-search"></i></span>
+                                <span class="input-group-text" id="search-genre"><i class="bi bi-search"></i></span>
                                 <input type="text" class="form-control" placeholder="Search..." id="searchInput" name="search"
                                 value="{{ request.args.get('search', '') }}"
                                 onkeydown="if(event.key === 'Enter') this.form.submit();">
@@ -97,32 +97,34 @@
     
         <div class="row mb-3">
             <div class="bg-body rounded shadow p-3">
-
+                
                 <div class="row px-3">
-                    <table class="table table-hover">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
 
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Name</th>
-                                <th scope="col" class="col-actions"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for genre in genres %}
+                            <thead>
                                 <tr>
-                                    <th scope="col">{{ genre['id'] }}</th>
-                                    <td>{{ genre['name'] }}</td>
-                                    <td>
-                                        <button class="btn btn-sm border-0" data-bs-toggle="modal" data-bs-target="#editGenre" data-id="{{ genre['id'] }}" data-name="{{ genre['name'] }}">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>                           
-                            {% endfor %}
-                        </tbody>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col" class="col-actions"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for genre in genres %}
+                                    <tr>
+                                        <th scope="col">{{ genre['id'] }}</th>
+                                        <td>{{ genre['name'] }}</td>
+                                        <td>
+                                            <button class="btn btn-sm border-0" data-bs-toggle="modal" data-bs-target="#editGenre" data-id="{{ genre['id'] }}" data-name="{{ genre['name'] }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                        </td>
+                                    </tr>                           
+                                {% endfor %}
+                            </tbody>
 
-                    </table>
+                        </table>
+                    </div>                  
                 </div>
 
                 <div class="row">

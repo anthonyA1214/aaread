@@ -30,12 +30,21 @@ def index():
 # Novels
 # ----------------------
 
-@admin_bp.route("/novels")
+@admin_bp.route("/novels",)
 @admin_required
 def view_novels():
-    
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    search = request.args.get('search', '')
 
-    return render_template("admin/novels/list.html")
+    query = Novel.query
+    if search:
+        query = query.filter(Novel.title.ilike(f"%{search}%"))
+
+    pagination = query.order_by(Novel.id.asc()).paginate(page=page, per_page=per_page, error_out=False)
+    novels = pagination.items
+
+    return render_template("admin/novels/list.html", novels=novels, pagination=pagination)
 
 
 @admin_bp.route("/novels/add", methods=["GET", "POST"])
@@ -47,7 +56,11 @@ def add_novel():
             status = request.form.get("status")
             author = request.form.get("author")
             released = request.form.get("released")
+            genres_ids = request.form.getlist("genres")
             posted_by = session.get("user_id")  
+
+            genres_ids = [int(gid) for gid in genres_ids] # converting strings id into integer optional but recommended said by AI
+            selected_genres = Genre.query.filter(Genre.id.in_(genres_ids)).all() # on why there is an underscore in 'in' cuz in is a python keyword so sqlalchemy make it 'in_'
 
             if not title:
                 flash("Title is required.", "danger")
@@ -61,7 +74,7 @@ def add_novel():
 
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                cover_filename = f"{title.replace(" ", "_")}_{filename}"
+                cover_filename = f"{title.replace(" ", "_")}_{filename}" # every space in the filename will be replaced by underscore
                 save_path = os.path.join(UPLOAD_FOLDER, cover_filename)
 
                 # Creates a folder if doesnt exit yet
@@ -77,8 +90,11 @@ def add_novel():
                 released=released,
                 posted_by=posted_by,
                 posted_on=posted_on,
-                cover_image=os.path.join("uploads", cover_filename) if cover_filename else None
+                cover_image=os.path.join("uploads", cover_filename).replace('\\', '/') if cover_filename else None
             )
+
+            new_novel.genres = selected_genres
+
             db.session.add(new_novel)
             db.session.commit()
 
@@ -86,14 +102,65 @@ def add_novel():
             return redirect(url_for("admin.view_novels"))
 
         else:
-            return render_template("admin/novels/add.html")
+            genres = Genre.query.order_by(Genre.name.asc()).all()
+            return render_template("admin/novels/add.html", genres=genres)
     
 
 @admin_bp.route("/novels/<int:novel_id>/edit", methods=["GET", "POST"])
 @admin_required
 def edit_novel(novel_id):
-    pass
-    
+    novel = Novel.query.get_or_404(novel_id)
+
+    if request.method == "POST":
+        title = request.form.get("title")
+        description = request.form.get("description")
+        status = request.form.get("status")
+        author = request.form.get("author")
+        released = request.form.get("released")
+
+        genres_ids = request.form.getlist("genres")
+        selected_genres = Genre.query.filter(Genre.id.in_(genres_ids)).all()
+
+        if not title:
+            flash("Title is required.", "danger")
+            return redirect(request.url)
+        
+        file = request.files.get("cover_image")
+        if file and allowed_file(file.filename):
+            if novel.cover_image:
+                old_path = os.path.join('static', novel.cover_image)
+                if os.path.exists(old_path):
+                    os.remove(old_path)
+
+            
+            filename = secure_filename(file.filename)
+            cover_filename = f"{title.replace(" ", "_")}_{filename}"
+            save_path = os.path.join(UPLOAD_FOLDER, cover_filename)
+
+            # Creates a folder if doesnt exit yet
+            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+            file.save(save_path)
+
+            novel.cover_image = os.path.join("uploads", cover_filename).replace("\\", "/")
+        
+        novel.title = title
+        novel.description = description
+        novel.status = status
+        novel.author = author
+        novel.released = released
+        novel.genres = selected_genres
+
+        db.session.commit()
+
+        flash("Novel updated successfully!", "success")
+        return redirect(url_for("admin.view_novels"))
+
+
+    else:
+        genres = Genre.query.order_by(Genre.name.asc()).all()
+
+        return render_template("admin/novels/edit.html", novel=novel, genres=genres)
 
 @admin_bp.route("/novels/<int:novel_id>/edit", methods=["POST"])
 @admin_required
@@ -109,7 +176,7 @@ def delete_novel(novel_id):
 @admin_required
 def view_chapters(novel_id):
     # list chapters for a specific novel
-    pass
+    return render_template("admin/chapters/list.html")
 
 
 @admin_bp.route("/novels/<int:novel_id>/chapters/add", methods=["GET", "POST"])

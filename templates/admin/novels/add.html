@@ -78,6 +78,21 @@
                             <input type="number" class="form-control" id="released" name="released" placeholder="e.g. 2024">
                         </div>
 
+                        <!-- genres -->
+                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3">
+                            <p class="form-label h4 sora">Genre(s)</p>
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for genre in genres %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="genres" value="{{ genre.id }}" id="{{ genre.id }}">
+                                        <label class="form-check-label" for="{{ genre.id }}">
+                                            {{ genre.name }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>        
+                        </div>
+
                         <div class="text-end px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3 py-3">
                             <button type="submit" class="btn btn-primary sora">
                                 <i class="bi bi-plus-circle"></i> Add Novel

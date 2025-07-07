@@ -52,14 +52,6 @@
                             </a>
                         </li>
 
-                        <!-- manage chapters -->
-                        <li class="nav-item">
-                            <a href="{{ url_for('admin.index') }}" class="nav-link {% if '/chapters' in request.path %}custom-active{% endif %}" 
-                            {% if '/chapters' in request.path %}aria-current="page"{% endif %}>
-                                <i class="bi bi-collection me-1"></i> Manage Chapters
-                            </a>
-                        </li>
-
                         <!-- manage genres -->
                         <li class="nav-item">
                             <a href="{{ url_for('admin.view_genres') }}" class="nav-link {% if request.path.startswith('/admin/genres') %}custom-active{% endif %}" 
@@ -67,7 +59,6 @@
                                 <i class="bi bi-tags me-1"></i> Manage Genres
                             </a>
                         </li>
-
                     </ul>         
                 </div>
             </aside>
@@ -90,7 +81,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
-                   
+                   <!-- offcanvas -->
                     <ul class="nav flex-column">
                         <!-- home -->
                         <li class="nav-item">
@@ -102,17 +93,9 @@
                                            
                         <!-- manage novels -->
                         <li class="nav-item">
-                            <a href="{{ url_for('admin.index') }}" class="nav-link {% if request.path.startswith('/admin/novels') %}custom-active{% endif %}" 
+                            <a href="{{ url_for('admin.view_novels') }}" class="nav-link {% if request.path.startswith('/admin/novels') %}custom-active{% endif %}" 
                             {% if not request.path.startswith('/admin/novels') %}aria-current="page"{% endif %}>
                                 <i class="bi bi-collection me-1"></i> Manage Novels
-                            </a>
-                        </li>
-
-                        <!-- manage chapters -->
-                        <li class="nav-item">
-                            <a href="{{ url_for('admin.index') }}" class="nav-link {% if '/chapters' in request.path %}custom-active{% endif %}" 
-                            {% if '/chapters' in request.path %}aria-current="page"{% endif %}>
-                                <i class="bi bi-collection me-1"></i> Manage Chapters
                             </a>
                         </li>
 
@@ -123,8 +106,8 @@
                                 <i class="bi bi-tags me-1"></i> Manage Genres
                             </a>
                         </li>
-
                     </ul>
+
                 </div>
             </div>
 
