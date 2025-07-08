@@ -11,7 +11,7 @@ from models.novel import Novel
 
 # the first argument is the location of the second argument will be saved be it file or folder
 UPLOAD_FOLDER = os.path.join("static", "uploads")
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "jfif", "gif"}
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -176,7 +176,9 @@ def delete_novel(novel_id):
 @admin_required
 def view_chapters(novel_id):
     # list chapters for a specific novel
-    return render_template("admin/chapters/list.html")
+    novel = Novel.query.get_or_404(novel_id)
+
+    return render_template("admin/chapters/list.html", novel=novel)
 
 
 @admin_bp.route("/novels/<int:novel_id>/chapters/add", methods=["GET", "POST"])

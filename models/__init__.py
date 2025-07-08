@@ -2,4 +2,4 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-from . import user, novel, genre, association
+from . import association, chapter, genre, novel, user

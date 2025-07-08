@@ -23,5 +23,7 @@ class Novel(db.Model):
     genres = db.relationship("Genre", secondary=novel_genres_table, back_populates="novels")
     saved_by_users = db.relationship("User", secondary=user_library_table, back_populates="saved_novels")
 
+    chapters = db.relationship("Chapter", back_populates="novel", cascade="all, delete-orphan")
+
 
 
