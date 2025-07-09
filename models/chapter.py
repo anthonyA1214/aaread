@@ -1,5 +1,5 @@
 from models import db
-from models.association import novel_genres_table
+from sqlalchemy import UniqueConstraint
 
 class Chapter(db.Model):
     __tablename__ = "chapters"
@@ -13,5 +13,7 @@ class Chapter(db.Model):
 
     # Relationship to novel model
     novel = db.relationship("Novel", back_populates="chapters")
+
+    __table_args__ = (UniqueConstraint('novel_id', 'chapter_num', name='uq_novel_chapter_num'),)
 
 

@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 from models import db
 from models.genre import Genre
 from models.novel import Novel
+from models.chapter import Chapter
 
 # the first argument is the location of the second argument will be saved be it file or folder
 UPLOAD_FOLDER = os.path.join("static", "uploads")
@@ -162,7 +163,7 @@ def edit_novel(novel_id):
 
         return render_template("admin/novels/edit.html", novel=novel, genres=genres)
 
-@admin_bp.route("/novels/<int:novel_id>/edit", methods=["POST"])
+@admin_bp.route("/novels/<int:novel_id>/delete", methods=["POST"])
 @admin_required
 def delete_novel(novel_id):
     pass
@@ -178,24 +179,97 @@ def view_chapters(novel_id):
     # list chapters for a specific novel
     novel = Novel.query.get_or_404(novel_id)
 
-    return render_template("admin/chapters/list.html", novel=novel)
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    search = request.args.get('search', '')
+
+    query = Chapter.query
+
+    if search:
+        query = query.filter(Chapter.chapter_num.ilike(f"%{search}%"))
+
+    pagination = query.order_by(Chapter.chapter_num.asc()).paginate(page=page, per_page=per_page)
+    chapters = pagination.items
+
+    return render_template("admin/chapters/list.html", novel=novel, chapters=chapters, pagination=pagination)
 
 
 @admin_bp.route("/novels/<int:novel_id>/chapters/add", methods=["GET", "POST"])
 @admin_required
 def add_chapter(novel_id):
-    pass
+    novel = Novel.query.get_or_404(novel_id)
+
+    if request.method == "POST":
+        chapter_num = request.form.get("chapter_num", type=int)
+        title = request.form.get("title")
+        content = request.form.get("content")
+        today = datetime.today()
+        posted_on = today.strftime("%B %d, %Y")
+
+        # check for duplicate chapter
+        existing_chapter = Chapter.query.filter_by(novel_id=novel.id, chapter_num=chapter_num).first()
+        if existing_chapter:
+            flash(f"Chapter {chapter_num} already exists for this novel.", "danger")
+            return redirect(request.url)
+        
+        new_chapter = Chapter(
+            novel_id = novel.id,
+            chapter_num = chapter_num,
+            title = title,
+            content = content,
+            posted_on = posted_on
+        )
+
+        # update novel's last updated timestamp
+        novel.updated_on = posted_on
+
+        db.session.add(new_chapter)
+        db.session.commit()
+
+        flash("Chapter added successfully!", "success")
+        return redirect(url_for("admin.view_chapters", novel_id=novel.id))
+
+    else:
+        return render_template("admin/chapters/add.html", novel=novel)
 
 
-@admin_bp.route("/novels/<int:novel_id>/chapters/edit", methods=["GET", "POST"])
+@admin_bp.route("/novels/<int:novel_id>/chapters/<int:chapter_num>/edit", methods=["GET", "POST"])
 @admin_required
-def edit_chapter(novel_id):   
-    pass
+def edit_chapter(novel_id, chapter_num):
+    novel = Novel.query.get_or_404(novel_id)
+
+    chapter = Chapter.query.filter_by(novel_id=novel.id, chapter_num=chapter_num).first_or_404()
+
+    if request.method == "POST":
+        new_chapter_num = request.form.get("chapter_num", type=int)
+        title = request.form.get("title")
+        content = request.form.get("content")
+
+        if new_chapter_num != chapter.chapter_num:
+            existing_chapter = Chapter.query.filter_by(novel_id=novel.id, chapter_num=new_chapter_num).first()
+            if existing_chapter:
+                flash(f"Chapter {chapter_num} already exists for this novel.", "danger")
+                return redirect(request.url)
+
+            chapter.chapter_num = new_chapter_num
+        
+        chapter.title = title
+        chapter.content = content
+
+        chapter.novel.updated_on = datetime.today().strftime("%B %d, %Y")
+
+        db.session.commit()
+
+        flash(f"Chapter {chapter.chapter_num} updated successfully!", "success")
+        return redirect(url_for("admin.view_chapters", novel_id=novel.id))
+
+    else:   
+        return render_template("admin/chapters/edit.html", novel=novel, chapter=chapter)
 
 
-@admin_bp.route("/novels/<int:novel_id>/chapters/delete", methods=["POST"])
+@admin_bp.route("/novels/<int:novel_id>/chapters/<int:chapter_num>/delete", methods=["POST"])
 @admin_required
-def delete_chapter(novel_id):
+def delete_chapter(novel_id, chapter_id):
     pass
 
 

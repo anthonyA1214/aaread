@@ -5,5 +5,58 @@
 {% endblock %}
 
 {% block main %}
+    <div class="d-flex justify-content-between align-items-center text-center">
+        <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Edit Chapter</p>
+        <a class="btn btn-primary me-0 me-md-5 mb-0" href="{{ url_for('admin.view_chapters', novel_id=novel.id) }}">
+            <i class="bi bi-arrow-bar-left"></i> Go Back
+        </a>
+    </div>
 
+    <hr class="mx-auto mt-0 mb-3">
+
+    <form method="POST" action="{{ url_for('admin.edit_chapter', novel_id=novel.id,  chapter_num=chapter.chapter_num) }}" enctype="multipart/form-data" id="uploadForm">
+        <div class="container">
+            <div class="row">
+
+                <!-- Right: Novel Details -->
+                <div class="col-12">
+                    <div class="bg-body shadow rounded p-4">
+                        <!-- header -->
+                        <div class="text-center text-lg-start">
+                            <p class="fs-5 ms-0 ms-lg-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Chapter Details</p>
+                            <hr class="mx-auto mt-0">
+                        </div>
+
+                        <!-- novel detail inputs here -->
+                        <!-- chapter number -->
+                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3">
+                            <label for="chapter_num" class="form-label h4">Chapter Number</label>
+                            <input type="number" class="form-control" id="chapter_num" name="chapter_num" placeholder="e.g. 1" value="{{ chapter.chapter_num }}">
+                        </div>
+
+
+                        <!-- title -->
+                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-d-2 mx-lg-3">
+                            <label for="title" class="form-label h4">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="Chapter title" value="{{ chapter.title}}">
+                        </div>
+
+
+                        <!-- content -->
+                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3">
+                            <label for="content" class="form-label h4">Content</label>
+                            <textarea type="text" class="form-control" id="content" name="content" rows="10" placeholder="Write the full chapter here...">{{ chapter.content }}</textarea>
+                        </div>
+
+                        <div class="text-end px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3 py-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-plus"></i> Edit Chapter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
 {% endblock %}
