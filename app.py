@@ -11,6 +11,7 @@ from helpers import login_required, is_safe_url
 
 from models import db
 from models.user import User
+from models.novel import Novel
 
 # Configure the Flask application
 app = Flask(__name__)
@@ -57,7 +58,9 @@ def page_not_found(e):
 @app.route("/")
 def index():
     """Render the index page."""
-    return render_template("public/index.html")
+    popular_novels = Novel.query.order_by(Novel.view_count.desc()).limit(4).all()
+
+    return render_template("public/index.html", popular_novels=popular_novels)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -69,7 +72,7 @@ def login():
 
         if not username_email or not password:
             flash("Username (or email) and password are required.", "danger")
-            return render_template("public/login.html")
+            return render_template("public/auth/login.html")
 
         user = User.query.filter(
             (User.username == username_email) | (User.email == username_email)
@@ -77,7 +80,7 @@ def login():
 
         if user is None or not user.check_password(password):
             flash("Invalid username (or email) or password.", "danger")
-            return render_template("public/login.html")
+            return render_template("public/auth/login.html")
 
         session["user_id"] = user.id
         session["username"] = user.username
@@ -96,7 +99,7 @@ def login():
             return redirect("/")
 
         session.clear()
-        return render_template("public/login.html")
+        return render_template("public/auth/login.html")
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -127,34 +130,34 @@ def signup():
         if errors:
             for err in errors:
                 flash(err, "danger")
-            return render_template("public/signup.html")
+            return render_template("public/auth/signup.html")
 
         try:
             valid_email = validate_email(email, check_deliverability=True)
             email = valid_email.normalized
         except EmailNotValidError as e:
             flash(f"Invalid email: {e}", "danger")
-            return render_template("public/signup.html")
+            return render_template("public/authsignup.html")
 
         if len(username) < 3 or len(username) > 20:
             flash("Username must be between 3 and 20 characters.", "danger")
-            return render_template("public/signup.html")
+            return render_template("public/auth/signup.html")
 
         if not username.isalnum():
             flash("Username must be alphanumeric.", "danger")
-            return render_template("public/signup.html")
+            return render_template("public/auth/signup.html")
 
         if len(password) < 6 or len(password) > 20:
             flash("Password must be between 6 and 20 characters.", "danger")
-            return render_template("public/signup.html")
+            return render_template("public/auth/signup.html")
 
         if len(confirm_password) < 6:
             flash("Password confirmation must be at least 6 characters long.", "danger")
-            return render_template("public/signup.html")
+            return render_template("public/auth/signup.html")
 
         if password != confirm_password:
             flash("Passwords do not match.", "danger")
-            return render_template("public/signup.html")
+            return render_template("public/auth/signup.html")
 
         existing_user = User.query.filter(
             (User.username == username) | (User.email == email)
@@ -162,7 +165,7 @@ def signup():
 
         if existing_user:
             flash("Username or email already exists.", "danger")
-            return render_template("public/signup.html")
+            return render_template("public/auth/signup.html")
 
         new_user = User(
             email=email,
@@ -177,7 +180,7 @@ def signup():
         flash("Signup successful! Please log in.", "success")
         return redirect("/login")
     else:
-        return render_template("public/signup.html")
+        return render_template("public/auth/signup.html")
 
 
 @app.route("/logout")

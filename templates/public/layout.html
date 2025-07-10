@@ -105,17 +105,19 @@
         </header>
 
         <!-- Main content area -->
-        <main>
+        <main class="p-5">
             {% block main %}
             {% endblock %}
         </main>
         
         <!-- Footer -->
-        <footer class="py-3 mt-auto shadow-sm border-top bg-body-tertiary">
+        <footer class="py-4 mt-auto shadow-sm border-top bg-body-tertiary">
             <div class="container text-center">
-                <p class="fs-6 my-0">Made with <i class="bi bi-heart-fill text-danger"></i> by anthonyA1214</p>
-                <p class="fs-6 my-0">Powered by Flask and Bootstrap</p>
-                <p class="fs-6 my-0">&copy; anthonyA1214 2025</p>
+                <div class="mb-2">
+                    <p class="fs-6 mb-1">Made with <i class="bi bi-heart-fill text-danger"></i> by <strong>anthonyA1214</strong></p>
+                    <p class="fs-6 mb-1">CS50 Final Project</p>
+                </div>
+                <small class="text-muted">&copy; 2025 anthonyA1214. All rights reserved.</small>
             </div>
         </footer>
 
