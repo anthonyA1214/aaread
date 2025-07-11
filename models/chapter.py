@@ -9,7 +9,7 @@ class Chapter(db.Model):
     title = db.Column(db.String(150))
     content = db.Column(db.Text)
     chapter_num = db.Column(db.Integer)
-    posted_on = db.Column(db.String(50))
+    posted_on = db.Column(db.DateTime)
 
     # Relationship to novel model
     novel = db.relationship("Novel", back_populates="chapters")

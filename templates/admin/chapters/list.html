@@ -106,9 +106,9 @@
                         <tbody>
                             {% for chapter in chapters %}
                                 <tr>
-                                    <th scope="col">{{ chapter['chapter_num'] }}</th>
-                                    <td>{{ chapter['title'] }}</td>
-                                    <td>{{ chapter['posted_on'] }}</td>
+                                    <th scope="col">{{ chapter.chapter_num }}</th>
+                                    <td>{{ chapter.title }}</td>
+                                    <td>{{ chapter.posted_on.strftime("%B %d, %Y" if chapter.posted_on else "N/A") }}</td>
                                     <td class="text-nowrap">
                                         <div class="d-flex align-items-center gap-2">
                                             <a href="{{ url_for('admin.edit_chapter', novel_id=novel.id, chapter_num=chapter.chapter_num) }}" class="btn btn-outline-primary border-0" data-bs-toggle="tooltip" data-bs-title="Edit chapter" data-id="{{ chapter['id'] }}" data-name="{{ chapter['name'] }}">

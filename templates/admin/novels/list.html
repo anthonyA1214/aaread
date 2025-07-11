@@ -70,15 +70,15 @@
                             <tbody>
                                 {% for novel in novels %}
                                     <tr>
-                                        <th scope="col">{{ novel['id'] }}</th>
-                                        <td>{{ novel['title'] }}</td>    
-                                        <td>{{ novel['status'] }}</td>
-                                        <td>{{ novel['author'] }}</td>
-                                        <td>{{ novel['released'] }}</td>
+                                        <th scope="col">{{ novel.id }}</th>
+                                        <td>{{ novel.title }}</td>    
+                                        <td>{{ novel.status }}</td>
+                                        <td>{{ novel.author }}</td>
+                                        <td>{{ novel.released if novel.released else "N/A" }}</td>
                                         <td>{{ novel.user.username }}</td>
-                                        <td>{{ novel['posted_on'] }}</td>
-                                        <td>{{ novel['updated_on'] }}</td>
-                                        <td>{{ novel['view_count'] }}</td>
+                                        <td>{{ novel.posted_on.strftime("%B %d, %Y") if novel.posted_on else "N/A" }}</td>
+                                        <td>{{ novel.updated_on.strftime("%B %d, %Y") if novel.updated_on else "N/A" }}</td>
+                                        <td>{{ novel.view_count }}</td>
                                         <td class="text-nowrap">
                                             <div class="d-flex align-items-center gap-2">
                                                 <a href="{{ url_for('admin.edit_novel', novel_id=novel.id) }}" class="btn btn-outline-primary border-0" data-bs-toggle="tooltip" data-bs-title="Edit novel" data-id="{{ novel['id'] }}" data-name="{{ novel['name'] }}">

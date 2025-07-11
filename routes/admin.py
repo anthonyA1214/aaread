@@ -2,7 +2,7 @@ import os
 
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from helpers import admin_required
-from datetime import datetime
+from datetime import datetime, timezone
 from werkzeug.utils import secure_filename
 
 from models import db
@@ -56,7 +56,7 @@ def add_novel():
             description = request.form.get("description")
             status = request.form.get("status")
             author = request.form.get("author")
-            released = request.form.get("released")
+            released = request.form.get("released", type=int)
             genres_ids = request.form.getlist("genres")
             posted_by = session.get("user_id")  
 
@@ -66,9 +66,8 @@ def add_novel():
             if not title:
                 flash("Title is required.", "danger")
                 return redirect(request.url)
-
-            today = datetime.today()
-            posted_on = today.strftime("%B %d, %Y")
+            
+            posted_on = datetime.now(timezone.utc)
 
             file = request.files.get("cover_image")
             cover_filename = None
@@ -117,7 +116,7 @@ def edit_novel(novel_id):
         description = request.form.get("description")
         status = request.form.get("status")
         author = request.form.get("author")
-        released = request.form.get("released")
+        released = request.form.get("released", type=int)
 
         genres_ids = request.form.getlist("genres")
         selected_genres = Genre.query.filter(Genre.id.in_(genres_ids)).all()
@@ -183,7 +182,7 @@ def view_chapters(novel_id):
     per_page = request.args.get('per_page', 10, type=int)
     search = request.args.get('search', '')
 
-    query = Chapter.query
+    query = Chapter.query.filter_by(novel_id=novel.id)
 
     if search:
         query = query.filter(Chapter.chapter_num.ilike(f"%{search}%"))
@@ -203,8 +202,7 @@ def add_chapter(novel_id):
         chapter_num = request.form.get("chapter_num", type=int)
         title = request.form.get("title")
         content = request.form.get("content")
-        today = datetime.today()
-        posted_on = today.strftime("%B %d, %Y")
+        posted_on = datetime.now(timezone.utc)
 
         # check for duplicate chapter
         existing_chapter = Chapter.query.filter_by(novel_id=novel.id, chapter_num=chapter_num).first()
@@ -256,7 +254,7 @@ def edit_chapter(novel_id, chapter_num):
         chapter.title = title
         chapter.content = content
 
-        chapter.novel.updated_on = datetime.today().strftime("%B %d, %Y")
+        chapter.novel.updated_on = datetime.now(timezone.utc)
 
         db.session.commit()
 

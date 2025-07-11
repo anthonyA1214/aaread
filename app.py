@@ -59,8 +59,10 @@ def page_not_found(e):
 def index():
     """Render the index page."""
     popular_novels = Novel.query.order_by(Novel.view_count.desc()).limit(4).all()
+    latest_novels = Novel.query.order_by(Novel.updated_on.desc()).limit(10).all()
 
-    return render_template("public/index.html", popular_novels=popular_novels)
+
+    return render_template("public/index.html", popular_novels=popular_novels, latest_novels=latest_novels)
 
 
 @app.route("/login", methods=["GET", "POST"])

@@ -37,11 +37,12 @@
             </div>
 
             <!-- POPULAR TODAY -->
+            <div class="text-center text-md-start mt-5">
+                <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Popular Now</p>
+            </div>          
+            <hr class="mt-0 mb-3">
+
             <div class="col-12 my-4">
-                <div class="text-center text-md-start">
-                    <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Popular Now</p>
-                </div>          
-                <hr class="mt-0 mb-3">
                 <div class="row g-3">
                     <!-- TODO -->
                     <!-- ONLY FOUR CARDS -->
@@ -64,9 +65,40 @@
             
             </div>                  
 
+
+             <div class="text-center text-md-start mt-5">
+                <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Latest Updates</p>
+            </div> 
+            <hr class="mt-0 mb-3">
+
             <div class="col-12 col-lg-8">
                 <div class="bg-body shadow rounded p-3 mb-3">
-                    hehe
+                    <div class="row g-3">
+                        <div class="col-12 border-bottom">
+                                asdasddsadas
+                        </div>
+                        {% for novel in latest_novels %}
+                            <div class="col-12 col-md-6 border-bottom">
+                                
+                                    <div class="card h-100 border-0 pb-2 mb-3">
+                                        <div class="row g-0">
+                                            <!-- image left side -->
+                                            <div class="col-4">
+                                                <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png')}}" class="rounded img-fluid object-fit-cover" alt="..." style="aspect-ratio: 2 / 3;">
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="card-body">
+                                                    <p class="fs-6 fw-semibold card-title text-truncate">{{ novel.title }}</p>
+                                                    <p class="card-text"></p>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
             <div class="col-12 col-lg-4">
