@@ -210,7 +210,8 @@ def novels():
     if request.method == "POST":
         pass
     else:
-        return render_template("public/novels.html")
+        novels = Novel.query.all()
+        return render_template("public/novels.html", novels=novels)
 
 
 @app.route("/library")

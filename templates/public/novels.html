@@ -1,9 +1,58 @@
 {% extends "public/layout.html" %}
 
 {% block title %}
-    Novels
+    Novels - aaread
 {% endblock %}
 
 {% block main %}
-    
+    <div class="container-sm py-5">
+        
+        <div class="text-center text-md-start">
+            <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Novels</p>
+        </div>        
+
+        <hr class="mt-0 mb-3">
+        
+        {% for novel in novels %}
+            <div class="col-12 border-bottom py-4">
+                <div class="row g-3" style="min-height: 190px;">
+                    <div class="col-4 col-sm-3 col-md-2 d-flex align-items-center">
+                        <div class="w-100 position-relative" style="aspect-ratio: 2 / 3;">
+                            <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png')}}" class="rounded img-fluid object-fit-cover w-100 h-100" alt="...">
+
+                            <div class="position-absolute start-0 end-0 bottom-0 p-2 text-center">
+                                <div class="btn btn-sm btn-primary text-truncate w-100" style="max-width: 100%;">
+                                    <i class="bi bi-plus"></i> Add to Library
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="ms-0 ms-sm-2 ms-md-3 ms-lg-5">
+                            <h5 class="fw-semibold mb-3 text-truncate">{{ novel.title }}</h5>
+
+                            <p class="text-muted small mb-3 clamp">{{ novel.description }}</p>
+
+                            <div class="mb-3">
+                                <i class="bi bi-file-earmark-text"></i> {{ novel.chapters|length }}
+                            </div>
+
+                            <p class="card-text text-truncate small text-secondary mb-3">
+                                {% for genre in novel.genres %}
+                                    {{ genre.name }}{% if not loop.last %} · {% endif %}
+                                {% endfor %}
+                            </p>
+
+                            {% if novel.status %}
+                                <span class="badge bg-secondary">{{ novel.status }}</span>
+                            {% endif %}
+                        </div>
+                        
+                    </div>
+                </div>        
+            </div>
+        {% endfor %}
+        
+        
+    </div>  
 {% endblock %}

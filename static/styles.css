@@ -42,14 +42,12 @@
   --bs-btn-disabled-border-color: #3F51B5;
 }
 
-path {
-  transform: translateZ(0); /* triggers GPU rendering */
-}
-
+/* body font  */
 .sora {
   font-family: 'Sora', sans-serif;
 }
 
+/* custom nav */
 .nav-link {
   color: var(--bg-body-tertiary) !important;
   transition: color 0.3s ease !important;
@@ -87,6 +85,7 @@ path {
   box-shadow: 0 0 0 0.2rem rgba(63, 81, 181, 0.25);
 }
 
+/* links */
 .auth-link a {
   color: #5C6BC0 !important; /* link color */
   text-decoration: none !important; /* optional, remove underline */
@@ -165,11 +164,25 @@ path {
   max-width: none;
 }
 
-.col-actions {
-  width: 1%;
-  white-space: nowrap;
-}
-
 .text-pre-wrap {
   white-space: pre-wrap;
 }
+
+.clamp {
+  display: -webkit-box;
+  display: box; /* fallback for older Android browsers */
+  box-orient: vertical;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+}
+
+@media (min-width: 992px) {
+  .clamp {
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+  }
+}
+

@@ -105,19 +105,24 @@
         </header>
 
         <!-- Main content area -->
-        <main class="p-5">
+        <main>
             {% block main %}
             {% endblock %}
         </main>
         
         <!-- Footer -->
-        <footer class="py-4 mt-auto shadow-sm border-top bg-body-tertiary">
+        <footer class="py-4 mt-auto border-top bg-body-tertiary shadow-sm">
             <div class="container text-center">
-                <div class="mb-2">
-                    <p class="fs-6 mb-1">Made with <i class="bi bi-heart-fill text-danger"></i> by <strong>anthonyA1214</strong></p>
-                    <p class="fs-6 mb-1">CS50 Final Project</p>
+                <!-- Top Info -->
+                <div class="mb-3">
+                    <p class="mb-1 fs-6">Made with <i class="bi bi-heart-fill text-danger"></i> by <strong>anthonyA1214</strong></p>
+                    <p class="mb-1 text-muted">CS50 Final Project — 2025</p>
                 </div>
-                <small class="text-muted">&copy; 2025 anthonyA1214. All rights reserved.</small>
+
+                <!-- Bottom Line -->
+                <div class="text-muted small">
+                    &copy; 2025 <strong>anthonyA1214</strong>. All rights reserved.
+                </div>
             </div>
         </footer>
 

@@ -5,14 +5,6 @@
 {% endblock %}
 
 {% block main %}
-    <div class="d-flex justify-content-between align-items-center text-center">
-        <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Manage Genres</p>
-        <button class="btn btn-primary me-0 me-md-5 mb-0" data-bs-toggle="modal" data-bs-target="#addGenre">
-            <i class="bi bi-plus"></i> Add New
-        </button>
-    </div>
-    <hr class="mx-auto mt-0 mb-3">
-
     <!-- add modal -->
     <div class="modal fade" id="addGenre" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addGenreLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -63,9 +55,19 @@
             </div>
         </div>
     </div>
-
+    
     <!-- contents -->
-    <div class="container">
+    <div class="container-sm py-5 px-4">
+        <!-- header -->
+        <div class="d-flex justify-content-between align-items-center text-center">
+            <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Manage Genres</p>
+            <button class="btn btn-primary me-0 me-md-5 mb-0" data-bs-toggle="modal" data-bs-target="#addGenre">
+                <i class="bi bi-plus"></i> Add New
+            </button>
+        </div>
+
+        <hr class="mx-auto mt-0 mb-3">
+
         <form method="get" action="{{ url_for('admin.view_genres') }}">
             <div class="row mb-3">
                 <div class="bg-body rounded shadow p-3">
@@ -106,9 +108,7 @@
                                 <tr>
                                     <th scope="col">ID</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col" class="col-actions">
-                                        <span class="visually-hidden">Actions</span>
-                                    </th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -116,10 +116,12 @@
                                     <tr>
                                         <th scope="col">{{ genre['id'] }}</th>
                                         <td>{{ genre['name'] }}</td>
-                                        <td>
-                                            <button class="btn btn-sm border-0" data-bs-toggle="modal" data-bs-target="#editGenre" data-id="{{ genre['id'] }}" data-name="{{ genre['name'] }}">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
+                                        <td class="text-nowrap">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <button class="btn btn-outline-primary border-0" data-bs-toggle="modal" data-bs-target="#editGenre" data-id="{{ genre.id }}" data-name="{{ genre.name }}">
+                                                    <i class="bi bi-pencil" data-bs-toggle="tooltip" data-bs-title="Edit genre"></i>
+                                                </button>
+                                            </div>                      
                                         </td>
                                     </tr>                           
                                 {% endfor %}
@@ -194,7 +196,8 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', filename='genres.js')}}"></script>
+    <script src="{{ url_for('static', filename='genres.js') }}"></script>
+    <script src="{{ url_for('static', filename='tooltip.js') }}"></script>
 {% endblock %}
 
 
