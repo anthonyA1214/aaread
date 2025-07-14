@@ -186,3 +186,11 @@
   }
 }
 
+.hover-glow {
+  transition: border-color 0.2s ease, background-color 0.2s ease !important;
+}
+
+.hover-glow:hover {
+  border-color: #3F51B5 !important; /* indigo border on hover */
+  background-color: rgba(63, 81, 181, 0.04) !important; /* optional light background tint */
+}

@@ -5,26 +5,27 @@
 {% endblock %}
 
 {% block main %}
-    <div class="d-flex justify-content-between align-items-center text-center">
-        <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Manage Chapters</p>
-        <a class="btn btn-primary me-0 me-md-5 mb-0" href="{{ url_for('admin.view_novels') }}">
-            <i class="bi bi-arrow-bar-left"></i> Go Back
-        </a>
-    </div>
+    <div class="container-sm py-5 px-4">
+        <!-- header -->
+        <div class="d-flex justify-content-between align-items-center text-center">
+            <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Manage Chapters</p>
+            <a class="btn btn-primary me-0 me-md-5 mb-0" href="{{ url_for('admin.view_novels') }}">
+                <i class="bi bi-arrow-bar-left"></i> Go Back
+            </a>
+        </div>
 
-    <hr class="mx-auto mt-0 mb-3">
+        <hr class="mx-auto mt-0 mb-3">
 
-    <div class="container">
-        <div class="row mb-3 bg-body shadow rounded p-3 align-items-center">
-            <div class="col-md-3 text-center mb-3 mb-lg-0">
+        <div class="row mb-3 bg-body shadow rounded p-3">
+            <div class="col-md-3 text-center mb-3 mb-lg-0 d-flex align-items-center justify-content-center">
                 <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png') }}" class="object-fit-cover w-100 img-fluid rounded" style="aspect-ratio: 2/3;">
             </div>
             <div class="col-md-9">
                 <p class="h3">{{ novel.title }}</p>
                 <div class="d-flex flex-column flex-md-row flex-wrap gap-2 gap-lg-3">
                     <span><i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-title="Status"></i> {{ novel.status }}</span>
-                    <span><i class="bi bi-clock" data-bs-toggle="tooltip" data-bs-title="Posted on"></i> {{ novel.posted_on.strftime("%B %d, %Y" if novel.posted_on else "N/A") }}</span>
-                    <span><i class="bi bi-arrow-repeat" data-bs-toggle="tooltip" data-bs-title="Last updated"></i> {{ novel.updated_on.strftime("%B %d, %Y" if novel.updated_on else "N/A") }}</span>
+                    <span><i class="bi bi-clock" data-bs-toggle="tooltip" data-bs-title="Posted on"></i> {{ novel.posted_on.strftime("%B %d, %Y") if novel.posted_on else "N/A" }}</span>
+                    <span><i class="bi bi-arrow-repeat" data-bs-toggle="tooltip" data-bs-title="Last updated"></i> {{ novel.updated_on.strftime("%B %d, %Y") if novel.updated_on else "N/A" }}</span>
                     <span><i class="bi bi-person-badge" data-bs-toggle="tooltip" data-bs-title="Author"></i> {{ novel.author }}</span>
                     <span><i class="bi bi-calendar" data-bs-toggle="tooltip" data-bs-title="Released"></i> {{ novel.released }}</span>
                     <span><i class="bi bi-person-circle" data-bs-toggle="tooltip" data-bs-title="Posted by"></i> {{ novel.user.username }}</span>

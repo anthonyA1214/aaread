@@ -48,17 +48,19 @@
                     <!-- ONLY FOUR CARDS -->
                     {% for novel in popular_novels %}
                         <div class="col-6 col-md-3">
-                            <div class="card h-100">
-                                <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png') }}" class="card-img-top img-fluid object-fit-cover overflow-hidden h-100 w-100" alt="..." style="aspect-ratio: 2 / 3;">
-                                <div class="card-body">
-                                    <p class="card-text text-truncate fw-semibold">{{ novel.title }}</p>
-                                    <p class="card-text text-truncate small text-secondary mt-0">
-                                        {% for genre in novel.genres %}
-                                            {{ genre.name }}{% if not loop.last %}, {% endif %}
-                                        {% endfor %}
-                                    </p>
+                            <a href="{{ url_for('view_novel', novel_id=novel.id )}}" class="text-decoration-none">
+                                <div class="card h-100">
+                                    <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png') }}" class="card-img-top img-fluid object-fit-cover overflow-hidden h-100 w-100" alt="..." style="aspect-ratio: 2 / 3;">
+                                    <div class="card-body">
+                                        <p class="card-text text-truncate fw-semibold">{{ novel.title }}</p>
+                                        <p class="card-text text-truncate small text-secondary mt-0">
+                                            {% for genre in novel.genres %}
+                                                {{ genre.name }}{% if not loop.last %}, {% endif %}
+                                            {% endfor %}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>                   
                         </div>
                     {% endfor %}
                 </div>
@@ -66,7 +68,7 @@
             </div>                  
 
 
-             <div class="text-center text-md-start mt-5">
+            <div class="text-center text-md-start mt-5">
                 <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Latest Updates</p>
             </div> 
             <hr class="mt-0 mb-3">
@@ -86,13 +88,23 @@
                                         <div class="row g-0">
                                             <!-- image left side -->
                                             <div class="col-4" style="aspect-ratio: 2 / 3;">
-                                                <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png')}}" class="rounded img-fluid object-fit-cover w-100 h-100" alt="...">
+                                                <a href="{{ url_for('view_novel', novel_id=novel.id )}}" class="text-decoration-none">
+                                                    <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png')}}" class="rounded img-fluid object-fit-cover w-100 h-100" alt="...">
+                                                </a>
                                             </div>
                                             <div class="col-8">
                                                 <div class="card-body">
-                                                    <p class="h6 card-title text-truncate">{{ novel.title }}</p>
-                                                    <p class="card-text"></p>
-                                                    
+                                                    <p class="h6 card-title text-truncate mb-3">{{ novel.title }}</p>
+                                                    <div class="card-text d-flex flex-column gap-2">
+                                                        {% for chapter in novel.latest_chapters %}
+                                                            <div class="d-flex align-items-center justify-content-between">
+                                                                <a href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=chapter.chapter_num) }}" class="text-decoration-none d-inline-block">
+                                                                    <span class="badge bg-secondary">Ch. {{ chapter.chapter_num }}</span>
+                                                                </a>
+                                                                <small class="text-muted">{{ moment(chapter.posted_on).fromNow() }}</small>    
+                                                            </div>                                                                                                          
+                                                        {% endfor %}
+                                                    </div>                              
                                                 </div>
                                             </div>
                                         </div>
@@ -119,3 +131,8 @@
         </div>           
     </div>
 {% endblock %}
+
+{% block script %}
+    {{ moment.include_moment() }}
+{% endblock %}
+

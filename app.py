@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, redirect, request, session, g, flash, get_flashed_messages
 from flask_session import Session
 from flask_migrate import Migrate
+from flask_moment import Moment
 from email_validator import validate_email, EmailNotValidError
 from urllib.parse import urlparse
 
@@ -12,9 +13,11 @@ from helpers import login_required, is_safe_url
 from models import db
 from models.user import User
 from models.novel import Novel
+from models.chapter import Chapter
 
 # Configure the Flask application
 app = Flask(__name__)
+moment = Moment(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -60,10 +63,19 @@ def index():
     """Render the index page."""
     popular_novels = Novel.query.order_by(Novel.view_count.desc()).limit(4).all()
     latest_novels = Novel.query.order_by(Novel.updated_on.desc()).limit(10).all()
-
+    
+    for novel in latest_novels:
+        novel.latest_chapters = (
+            Chapter.query.filter_by(novel_id=novel.id)
+            .order_by(Chapter.chapter_num.desc()).limit(3).all()
+        )
 
     return render_template("public/index.html", popular_novels=popular_novels, latest_novels=latest_novels)
 
+
+# ----------------------
+# Auth
+# ----------------------
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -204,6 +216,10 @@ def logout():
     return redirect(next_page)
 
 
+# ----------------------
+# Novels
+# ----------------------
+
 @app.route("/novels", methods=["GET", "POST"])
 def novels():
     """Display a list of novels."""
@@ -212,6 +228,19 @@ def novels():
     else:
         novels = Novel.query.all()
         return render_template("public/novels.html", novels=novels)
+
+
+@app.route("/novels/<int:novel_id>")
+def view_novel(novel_id):
+    novel = Novel.query.get_or_404(novel_id)
+
+    return render_template("public/view_novel.html", novel=novel)
+
+
+@app.route("/novels/<int:novel_id>/chapters/<int:chapter_num>")
+def read_chapter(novel_id, chapter_num):
+    
+    return render_template("public/view_chapter.html")
 
 
 @app.route("/library")
