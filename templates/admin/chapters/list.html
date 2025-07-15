@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    <div class="container-sm py-5 px-4">
+    <div class="container-sm py-5">
         <!-- header -->
         <div class="d-flex justify-content-between align-items-center text-center">
             <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Manage Chapters</p>
@@ -16,172 +16,178 @@
 
         <hr class="mx-auto mt-0 mb-3">
 
-        <div class="row mb-3 bg-body shadow rounded p-3">
-            <div class="col-md-3 text-center mb-3 mb-lg-0 d-flex align-items-center justify-content-center">
-                <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png') }}" class="object-fit-cover w-100 img-fluid rounded" style="aspect-ratio: 2/3;">
-            </div>
-            <div class="col-md-9">
-                <p class="h3">{{ novel.title }}</p>
-                <div class="d-flex flex-column flex-md-row flex-wrap gap-2 gap-lg-3">
-                    <span><i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-title="Status"></i> {{ novel.status }}</span>
-                    <span><i class="bi bi-clock" data-bs-toggle="tooltip" data-bs-title="Posted on"></i> {{ novel.posted_on.strftime("%B %d, %Y") if novel.posted_on else "N/A" }}</span>
-                    <span><i class="bi bi-arrow-repeat" data-bs-toggle="tooltip" data-bs-title="Last updated"></i> {{ novel.updated_on.strftime("%B %d, %Y") if novel.updated_on else "N/A" }}</span>
-                    <span><i class="bi bi-person-badge" data-bs-toggle="tooltip" data-bs-title="Author"></i> {{ novel.author }}</span>
-                    <span><i class="bi bi-calendar" data-bs-toggle="tooltip" data-bs-title="Released"></i> {{ novel.released }}</span>
-                    <span><i class="bi bi-person-circle" data-bs-toggle="tooltip" data-bs-title="Posted by"></i> {{ novel.user.username }}</span>
-                    <span><i class="bi bi-eye" data-bs-toggle="tooltip" data-bs-title="View Count"></i> {{ novel.view_count }} Views</span>
+        <div class="mb-3 bg-body shadow rounded p-3">
+            <div class="row">
+                <div class="col-md-3 text-center mb-3 mb-lg-0 d-flex align-items-center justify-content-center">
+                    <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png') }}" class="object-fit-cover w-100 img-fluid rounded" style="aspect-ratio: 2/3;">
                 </div>
-                <div class="d-flex flex-wrap gap-2 mt-2">
-                    {% for genre in novel.genres %}
-                    <span class="badge text-bg-secondary">{{ genre.name }}</span>
-                    {% endfor %}
+                <div class="col-md-9">
+                    <p class="h3">{{ novel.title }}</p>
+                    <div class="d-flex flex-column flex-md-row flex-wrap gap-2 gap-lg-3">
+                        <span><i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-title="Status"></i> {{ novel.status }}</span>
+                        <span><i class="bi bi-clock" data-bs-toggle="tooltip" data-bs-title="Posted on"></i> {{ novel.posted_on.strftime("%B %d, %Y") if novel.posted_on else "N/A" }}</span>
+                        <span><i class="bi bi-arrow-repeat" data-bs-toggle="tooltip" data-bs-title="Last updated"></i> {{ novel.updated_on.strftime("%B %d, %Y") if novel.updated_on else "N/A" }}</span>
+                        <span><i class="bi bi-person-badge" data-bs-toggle="tooltip" data-bs-title="Author"></i> {{ novel.author }}</span>
+                        <span><i class="bi bi-calendar" data-bs-toggle="tooltip" data-bs-title="Released"></i> {{ novel.released }}</span>
+                        <span><i class="bi bi-person-circle" data-bs-toggle="tooltip" data-bs-title="Posted by"></i> {{ novel.user.username }}</span>
+                        <span><i class="bi bi-eye" data-bs-toggle="tooltip" data-bs-title="View Count"></i> {{ novel.view_count }} Views</span>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 mt-2">
+                        {% for genre in novel.genres %}
+                        <span class="badge text-bg-secondary">{{ genre.name }}</span>
+                        {% endfor %}
+                    </div>
+                    <hr>
+                    <div class="bg-body shadow-sm rounded p-3 overflow-scroll" style="max-height: 300px;">
+                        <div class="fs-6 text-pre-wrap text-break">{{ novel.description }}</div>
+                    </div>             
                 </div>
-                <hr>
-                <div class="bg-body shadow-sm rounded p-3 overflow-scroll" style="max-height: 300px;">
-                    <div class="fs-6 text-pre-wrap text-break">{{ novel.description }}</div>
-                </div>             
             </div>
         </div>
         
-        <div class="row mb-3 bg-body shadow rounded p-3">
-            <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-end">
+        <div class="mb-3 bg-body shadow rounded p-3">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
 
-                <p class="fs-5 fw-light text-center text-md-start mb-2 mb-md-0">
-                    Chapters: <span class="fw-semibold">{{ novel.title }}</span>
-                </p>
+                        <p class="fs-5 fw-light text-center text-md-start mb-2 mb-md-0">
+                            Chapters: <span class="fw-semibold">{{ novel.title }}</span>
+                        </p>
 
-                <!-- add chapter button -->
-                <div class="text-center text-md-end w-100">
-                    <a class="btn btn-primary" href="{{ url_for('admin.add_chapter', novel_id=novel.id) }}">
-                        <i class="bi bi-plus"></i> Add New
-                    </a>
-                </div>   
+                        <!-- add chapter button -->
+                        <div class="text-center text-md-end">
+                            <a class="btn btn-primary" href="{{ url_for('admin.add_chapter', novel_id=novel.id) }}">
+                                <i class="bi bi-plus"></i> Add New
+                            </a>
+                        </div>   
 
-            </div>
+                    </div>
+                    <hr class="my-3">
 
-            <hr class="my-3">
+                    <form method="get" action="{{ url_for('admin.view_chapters', novel_id=novel.id) }}">
+                        <div class="col-12 mb-3">
 
-            <form method="get" action="{{ url_for('admin.view_chapters', novel_id=novel.id) }}">
-                <div class="col-12 mb-3">
+                            <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
+                                
+                                <div class="w-100" style="max-width: 200px;">
+                                    <label for="perPageSelect" class="form-label">Items per page</label>
+                                    <select class="form-select" aria-label="perPageSelect" id="perPageSelect" name="per_page" onchange="this.form.submit()">
+                                        <option value="5" {% if request.args.get('per_page') == '5' %}selected{% endif %}>Show 5</option>
+                                        <option value="10" {% if request.args.get('per_page') == '10' or not request.args.get('per_page') %}selected{% endif %}>Show 10</option>
+                                        <option value="25" {% if request.args.get('per_page') == '25' %}selected{% endif %}>Show 25</option>
+                                        <option value="50" {% if request.args.get('per_page') == '50' %}selected{% endif %}>Show 50</option>
+                                    </select>
+                                </div>
 
-                    <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
-                        
-                        <div class="w-100" style="max-width: 200px;">
-                            <label for="perPageSelect" class="form-label">Items per page</label>
-                            <select class="form-select" aria-label="perPageSelect" id="perPageSelect" name="per_page" onchange="this.form.submit()">
-                                <option value="5" {% if request.args.get('per_page') == '5' %}selected{% endif %}>Show 5</option>
-                                <option value="10" {% if request.args.get('per_page') == '10' or not request.args.get('per_page') %}selected{% endif %}>Show 10</option>
-                                <option value="25" {% if request.args.get('per_page') == '25' %}selected{% endif %}>Show 25</option>
-                                <option value="50" {% if request.args.get('per_page') == '50' %}selected{% endif %}>Show 50</option>
-                            </select>
-                        </div>
-
-                        <div class="w-100" style="max-width: 250px;">
-                            <label for="searchInput" class="form-label">Search Chapters</label>
-                            <div class="input-group">
-                                <span class="input-group-text" id="search-genre"><i class="bi bi-search"></i></span>
-                                <input type="text" class="form-control" placeholder="Search..." id="searchInput" name="search"
-                                value="{{ request.args.get('search', '') }}"
-                                onkeydown="if(event.key === 'Enter') this.form.submit();">
+                                <div class="w-100" style="max-width: 250px;">
+                                    <label for="searchInput" class="form-label">Search Chapters</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="search-genre"><i class="bi bi-search"></i></span>
+                                        <input type="text" class="form-control" placeholder="Search..." id="searchInput" name="search"
+                                        value="{{ request.args.get('search', '') }}"
+                                        onkeydown="if(event.key === 'Enter') this.form.submit();">
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
+                    </form>
+                    
+                    <div class="col-12 px-3">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Chapter #</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Posted on</th>
+                                        <th scope="col" class="col-actions">
+                                            <span class="visually-hidden">Actions</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for chapter in chapters %}
+                                        <tr>
+                                            <th scope="col">{{ chapter.chapter_num }}</th>
+                                            <td>{{ chapter.title }}</td>
+                                            <td>{{ chapter.posted_on.strftime("%B %d, %Y" if chapter.posted_on else "N/A") }}</td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <div class="ms-auto d-align-items-center gap-2">
+                                                        <a href="{{ url_for('admin.edit_chapter', novel_id=novel.id, chapter_num=chapter.chapter_num) }}" class="btn btn-outline-primary border-0" data-bs-toggle="tooltip" data-bs-title="Edit chapter" data-id="{{ chapter['id'] }}" data-name="{{ chapter['name'] }}">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </a>
+                                                    </div>   
+                                                </div>                                              
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>                
                     </div>
 
-                </div>
-            </form>
-            
-            <div class="col-12 px-3">
-                <div class="table-responsive">
-                    <table class="table table-hover">
+                    <div class="col-12">
+                        <div class="d-flex flex-column flex-md-row text-center justify-content-between align-items-center px-3">
+                            <p class="text-muted">
+                                Showing 
+                                {{ (pagination.page - 1) * pagination.per_page + 1}} -
+                                {{ pagination.page * pagination.per_page if pagination.page * pagination.per_page < pagination.total else pagination.total }}
+                                of {{ pagination.total }} chapters
+                            </p>
+                            
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination pagination-sm flex-wrap">
 
-                        <thead>
-                            <tr>
-                                <th scope="col">Chapter #</th>
-                                <th scope="col">Title</th>
-                                <th scope="col">Posted on</th>
-                                <th scope="col" class="col-actions">
-                                    <span class="visually-hidden">Actions</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for chapter in chapters %}
-                                <tr>
-                                    <th scope="col">{{ chapter.chapter_num }}</th>
-                                    <td>{{ chapter.title }}</td>
-                                    <td>{{ chapter.posted_on.strftime("%B %d, %Y" if chapter.posted_on else "N/A") }}</td>
-                                    <td class="text-nowrap">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <a href="{{ url_for('admin.edit_chapter', novel_id=novel.id, chapter_num=chapter.chapter_num) }}" class="btn btn-outline-primary border-0" data-bs-toggle="tooltip" data-bs-title="Edit chapter" data-id="{{ chapter['id'] }}" data-name="{{ chapter['name'] }}">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                        </div>                                                 
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-
-                    </table>
-                </div>                
-            </div>
-
-            <div class="col-12">
-                <div class="d-flex flex-column flex-md-row text-center justify-content-between align-items-center px-3">
-                    <p class="text-muted">
-                        Showing 
-                        {{ (pagination.page - 1) * pagination.per_page + 1}} -
-                        {{ pagination.page * pagination.per_page if pagination.page * pagination.per_page < pagination.total else pagination.total }}
-                        of {{ pagination.total }} chapters
-                    </p>
-                    
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination pagination-sm flex-wrap">
-
-                            <!-- First page -->
-                            <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
-                            <a class="page-link" href="{{ url_for('admin.view_genres', page=1, per_page=request.args.get('per_page', '10'), search=request.args.get('search', '')) }}" aria-label="First">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                            </li>
-
-                            <!-- Previous page -->
-                            <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
-                            <a class="page-link" href="{{ url_for('admin.view_genres', page=pagination.prev_num, per_page=request.args.get('per_page', '10'), search=request.args.get('search', '')) }}" aria-label="Previous">
-                                <span aria-hidden="true">&lsaquo;</span>
-                            </a>
-                            </li>
-
-                            <!-- Page numbers -->
-                            {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
-                                {% if page_num %}
-                                    <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
-                                        <a class="page-link" href="{{ url_for('admin.view_novels', page=page_num, per_page=request.args.get('per_page', '10'), search=request.args.get('search', '')) }}">{{ page_num }}</a>
+                                    <!-- First page -->
+                                    <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                                    <a class="page-link" href="{{ url_for('admin.view_genres', page=1, per_page=request.args.get('per_page', '10'), search=request.args.get('search', '')) }}" aria-label="First">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
                                     </li>
-                                {% else %}
-                                    <li class="page-item disabled"><a class="page-link">…</a></li>
-                                {% endif %}
-                            {% endfor %}
 
-                            <!-- Next page -->
-                            <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
-                            <a class="page-link" href="{{ url_for('admin.view_novels', page=pagination.next_num, per_page=request.args.get('per_page', '10'), search=request.args.get('search', '')) }}" aria-label="Next">
-                                <span aria-hidden="true">&rsaquo;</span>
-                            </a>
-                            </li>
+                                    <!-- Previous page -->
+                                    <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                                    <a class="page-link" href="{{ url_for('admin.view_genres', page=pagination.prev_num, per_page=request.args.get('per_page', '10'), search=request.args.get('search', '')) }}" aria-label="Previous">
+                                        <span aria-hidden="true">&lsaquo;</span>
+                                    </a>
+                                    </li>
 
-                            <!-- Last page -->
-                            <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
-                            <a class="page-link" href="{{ url_for('admin.view_novels', page=pagination.pages, per_page=request.args.get('per_page', '10'), search=request.args.get('search', '')) }}" aria-label="Last">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                            </li>
-                        </ul>
-                    </nav>
+                                    <!-- Page numbers -->
+                                    {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                        {% if page_num %}
+                                            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                                <a class="page-link" href="{{ url_for('admin.view_novels', page=page_num, per_page=request.args.get('per_page', '10'), search=request.args.get('search', '')) }}">{{ page_num }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled"><a class="page-link">…</a></li>
+                                        {% endif %}
+                                    {% endfor %}
 
+                                    <!-- Next page -->
+                                    <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                                    <a class="page-link" href="{{ url_for('admin.view_novels', page=pagination.next_num, per_page=request.args.get('per_page', '10'), search=request.args.get('search', '')) }}" aria-label="Next">
+                                        <span aria-hidden="true">&rsaquo;</span>
+                                    </a>
+                                    </li>
+
+                                    <!-- Last page -->
+                                    <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                                    <a class="page-link" href="{{ url_for('admin.view_novels', page=pagination.pages, per_page=request.args.get('per_page', '10'), search=request.args.get('search', '')) }}" aria-label="Last">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                    </li>
+                                </ul>
+                            </nav>
+
+                        </div>
+
+                    </div>
                 </div>
-
             </div>
-            
         </div>
     </div>
         

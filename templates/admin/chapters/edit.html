@@ -5,21 +5,22 @@
 {% endblock %}
 
 {% block main %}
-    <div class="d-flex justify-content-between align-items-center text-center">
-        <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Edit Chapter</p>
-        <a class="btn btn-primary me-0 me-md-5 mb-0" href="{{ url_for('admin.view_chapters', novel_id=novel.id) }}">
-            <i class="bi bi-arrow-bar-left"></i> Go Back
-        </a>
-    </div>
-
-    <hr class="mx-auto mt-0 mb-3">
-
     <form method="POST" action="{{ url_for('admin.edit_chapter', novel_id=novel.id,  chapter_num=chapter.chapter_num) }}" enctype="multipart/form-data" id="uploadForm">
-        <div class="container">
-            <div class="row">
+        <div class="container-sm py-5">
 
+            <div class="d-flex justify-content-between align-items-center text-center">
+                <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Edit Chapter</p>
+                <a class="btn btn-primary me-0 me-md-5 mb-0" href="{{ url_for('admin.view_chapters', novel_id=novel.id) }}">
+                    <i class="bi bi-arrow-bar-left"></i> Go Back
+                </a>
+            </div>
+
+            <hr class="mx-auto mt-0 mb-3">
+            
+            <div class="row">
                 <!-- Right: Novel Details -->
                 <div class="col-12">
+                    
                     <div class="bg-body shadow rounded p-4">
                         <!-- header -->
                         <div class="text-center text-lg-start">

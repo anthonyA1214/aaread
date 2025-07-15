@@ -234,13 +234,18 @@ def novels():
 def view_novel(novel_id):
     novel = Novel.query.get_or_404(novel_id)
 
-    return render_template("public/view_novel.html", novel=novel)
+    chapters = novel.chapters
+
+    first_chapter = chapters[0] if chapters else None
+    last_chapter = chapters[-1] if chapters else None
+
+    return render_template("public/view_novel.html", novel=novel, first_chapter=first_chapter, last_chapter=last_chapter)
 
 
 @app.route("/novels/<int:novel_id>/chapters/<int:chapter_num>")
 def read_chapter(novel_id, chapter_num):
     
-    return render_template("public/view_chapter.html")
+    return render_template("public/read_chapter.html")
 
 
 @app.route("/library")

@@ -6,7 +6,7 @@
 
 {% block main %}
     <form method="POST" action="{{ url_for('admin.add_novel') }}" enctype="multipart/form-data" id="uploadForm">
-        <div class="container-sm py-5 px-4">
+        <div class="container-sm py-5">
             <div class="d-flex justify-content-between align-items-center text-center">
                 <p class="fs-3 ms-0 ms-md-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">Add Novel</p>
                 <a class="btn btn-primary me-0 me-md-5 mb-0" href="{{ url_for('admin.view_novels') }}">
@@ -43,61 +43,63 @@
                             <hr class="mx-auto mt-0">
                         </div>
 
-                        <!-- novel detail inputs here -->
-                        <!-- title -->
-                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-d-2 mx-lg-3">
-                            <label for="title" class="form-label h4">Title</label>
-                            <input type="text" class="form-control" id="title" name="title" placeholder="Untitled novel">
-                        </div>
+                            <!-- novel detail inputs here -->
+                        <div class="px-0 px-md-2 px-lg-5 mx-0 mx-d-2 mx-lg-3">
+                            <!-- title -->
+                            <div class="mb-3">
+                                <label for="title" class="form-label h4">Title</label>
+                                <input type="text" class="form-control" id="title" name="title" placeholder="Untitled novel">
+                            </div>
 
-                        <!-- status -->
-                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-d-2 mx-lg-3">
-                            <label for="status" class="form-label h4">Status</label>
-                            <select class="form-select" aria-label="status" id="status" name="status">
-                                <option value="Ongoing" selected>Ongoing</option>
-                                <option value="Completed">Completed</option>
-                                <option value="Hiatus">Hiatus</option>
-                                <option value="Dropped">Dropped</option>
-                            </select>
-                        </div>
+                            <!-- status -->
+                            <div class="mb-3">
+                                <label for="status" class="form-label h4">Status</label>
+                                <select class="form-select" aria-label="status" id="status" name="status">
+                                    <option value="Ongoing" selected>Ongoing</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Hiatus">Hiatus</option>
+                                    <option value="Dropped">Dropped</option>
+                                </select>
+                            </div>
 
-                        <!-- author -->
-                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3">
-                            <label for="author" class="form-label h4">Author</label>
-                            <input type="text" class="form-control" id="author" name="author" placeholder="Novel author">
-                        </div>
+                            <!-- author -->
+                            <div class="mb-3">
+                                <label for="author" class="form-label h4">Author</label>
+                                <input type="text" class="form-control" id="author" name="author" placeholder="Novel author">
+                            </div>
 
-                        <!-- description -->
-                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3">
-                            <label for="description" class="form-label h4">Description</label>
-                            <textarea type="text" class="form-control" id="description" name="description" rows="5"></textarea>
-                        </div>
+                            <!-- description -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label h4">Description</label>
+                                <textarea type="text" class="form-control" id="description" name="description" rows="5"></textarea>
+                            </div>
 
-                        <!-- released year -->
-                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3">
-                            <label for="released" class="form-label h4">Released Year</label>
-                            <input type="number" class="form-control" id="released" name="released" placeholder="e.g. 2024">
-                        </div>
+                            <!-- released year -->
+                            <div class="mb-3">
+                                <label for="released" class="form-label h4">Released Year</label>
+                                <input type="number" class="form-control" id="released" name="released" placeholder="e.g. 2024">
+                            </div>
 
-                        <!-- genres -->
-                        <div class="mb-3 px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3">
-                            <p class="form-label h4">Genre(s)</p>
-                            <div class="d-flex flex-wrap gap-2">
-                                {% for genre in genres %}
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="genres" value="{{ genre.id }}" id="{{ genre.id }}">
-                                        <label class="form-check-label" for="{{ genre.id }}">
-                                            {{ genre.name }}
-                                        </label>
-                                    </div>
-                                {% endfor %}
-                            </div>        
-                        </div>
+                            <!-- genres -->
+                            <div class="mb-3">
+                                <p class="form-label h4">Genre(s)</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for genre in genres %}
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="genres" value="{{ genre.id }}" id="{{ genre.id }}">
+                                            <label class="form-check-label" for="{{ genre.id }}">
+                                                {{ genre.name }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>        
+                            </div>
 
-                        <div class="text-end px-0 px-md-2 px-lg-5 mx-0 mx-md-2 mx-lg-3 py-3">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-plus"></i> Add Novel
-                            </button>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-plus"></i> Add Novel
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

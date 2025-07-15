@@ -10,7 +10,7 @@
         <div class="bg-body shadow rounded p-3 mb-4">
             <div class="row">
                 <div class="col-md-3 text-center mb-3 mb-lg-0 d-flex align-items-center justify-content-center">
-                    <div class="position-relative w-100 rounded" style="aspect-ratio: 2/3;">
+                    <div class="position-relative w-100" style="aspect-ratio: 2/3;">
                         <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png') }}" class="object-fit-cover w-100 h-100 img-fluid rounded">
                         <!-- Overlay Container for Buttons -->
                         <div class="position-absolute start-0 end-0 bottom-0 p-2" style="background: rgba(0,0,0,0.3);">
@@ -62,10 +62,10 @@
                     <hr class="mt-0 mb-3">
                     
                     <div class="d-flex flex-row justify-content-center align-items-center gap-5 mb-3">
-                        <a href="#" class="btn btn-outline-primary">
+                        <a href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=first_chapter.chapter_num) }}" class="btn btn-outline-primary">
                             Read First
                         </a>
-                        <a href="#" class="btn btn-outline-primary">
+                        <a href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=last_chapter.chapter_num) }}" class="btn btn-outline-primary">
                             Read Last
                         </a>
                     </div>
@@ -81,7 +81,7 @@
 
                     <div class="d-flex flex-column gap-3" style="max-height: 400px; overflow-y: auto;">
                         {% for chapter in novel.chapters %} 
-                            <a href="#" class="text-decoration-none text-body">
+                            <a href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=chapter.chapter_num) }}" class="text-decoration-none text-body">
                                 <div class="border rounded bg-body p-3 shadow-sm hover-glow">
                                     <div class="d-flex align-items-center mb-1">
                                         <span class="badge bg-secondary me-2">Ch.{{ chapter.chapter_num }}</span>{{ chapter.title }}
