@@ -194,3 +194,22 @@
   border-color: #3F51B5 !important; /* indigo border on hover */
   background-color: rgba(63, 81, 181, 0.04) !important; /* optional light background tint */
 }
+
+/* READER PAGE */
+
+#reader-body #reader-content {
+  margin-top: 26px; /* or use padding-top */
+  margin-bottom: 26px;
+}
+
+.reader-ui {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1030 !important;
+}
+
+.reader-ui.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
