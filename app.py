@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, redirect, request, session, g, flash, get_flashed_messages
+from flask import Flask, render_template, redirect, request, session, g, flash, get_flashed_messages, jsonify
 from flask_session import Session
 from flask_migrate import Migrate
 from flask_moment import Moment
@@ -226,8 +226,15 @@ def novels():
     if request.method == "POST":
         pass
     else:
+        user_id = session.get("user_id")
+
+        user = User.query.get(user_id) if user_id else None
+
         novels = Novel.query.all()
-        return render_template("public/novels.html", novels=novels)
+
+        saved_ids = {novel.id for novel in user.saved_novels} if user else set()
+
+        return render_template("public/novels.html", novels=novels, saved_ids=saved_ids)
 
 
 @app.route("/novels/<int:novel_id>")
@@ -257,8 +264,69 @@ def read_chapter(novel_id, chapter_num):
 @login_required
 def library():
     """Display the user's library."""
-    return render_template("public/library.html")
+    user_id = session.get("user_id")
+
+    user = User.query.get(user_id) if user_id else None
+
+    saved_novels = user.saved_novels
+
+    return render_template("public/library.html", novels=saved_novels)
+
+
+@app.route("/add-to-library", methods=["POST"])
+def add_to_library():
+    if request.method == "POST":
+
+        if 'user_id' not in session:
+            return jsonify(success=False, message="You must be logged in."), 401
+        
+        data = request.get_json()
+        novel_id = data.get('novel_id')
+
+        if not novel_id:
+            return jsonify(success=False, message="Missing novel ID."), 400
+        
+        user = User.query.get(session["user_id"])
+        novel = Novel.query.get(novel_id)
+
+        if not novel:
+            return jsonify(success=False, message="Novel not found."), 404
+        
+        if novel in user.saved_novels:
+            return jsonify(success=True, message="Already in library.")
+        
+        user.saved_novels.append(novel)
+        db.session.commit()
+
+        return jsonify(success=True, message="Novel added to library.")
+
+
+@app.route("/remove-from-library", methods=["POST"])
+def remove_from_library():
+    if request.method == "POST":
+
+        if "user_id" not in session:
+            return jsonify(success=False, message="You must be logged in."), 401
+        
+        data = request.get_json()
+        novel_id = data.get("novel_id")
+
+        if not novel_id:
+            return jsonify(success=False, message="Missing novel ID."), 400
+        
+        user = User.query.get(session["user_id"])
+        novel = Novel.query.get(novel_id)
+
+        if not novel:
+            return jsonify(success=False, message="Novel not found."), 404
+        
+        user.saved_novels.remove(novel)
+        db.session.commit()
+
+        return jsonify(success=True, message="Novel removed from library.")
 
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+
+

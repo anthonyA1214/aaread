@@ -15,12 +15,21 @@
                         <!-- Overlay Container for Buttons -->
                         <div class="position-absolute start-0 end-0 bottom-0 p-2" style="background: rgba(0,0,0,0.3);">
                             <div class="d-flex flex-column gap-2">
-                                <a class="btn btn-secondary text-truncate w-100">
-                                    <i class="bi bi-book"></i> Start Reading
-                                </a>
-                                <a class="btn btn-primary text-truncate w-100">
-                                    <i class="bi bi-plus"></i> Add to Library
-                                </a>
+                                {% if first_chapter %}
+                                    <a class="btn btn-secondary text-truncate w-100" href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=first_chapter.chapter_num) }}">
+                                        <i class="bi bi-book"></i> Start Reading
+                                    </a>
+                                {% else %}  
+                                    <a class="btn btn-secondary text-truncate w-100 disabled" href="#">
+                                        <i class="bi bi-book"></i> Start Reading
+                                    </a>
+                                {% endif %}
+
+                                {% if is_loggedin %}
+                                    <a class="btn btn-primary text-truncate w-100">
+                                        <i class="bi bi-plus"></i> Add to Library
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -62,12 +71,27 @@
                     <hr class="mt-0 mb-3">
                     
                     <div class="d-flex flex-row justify-content-center align-items-center gap-5 mb-3">
-                        <a href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=first_chapter.chapter_num) }}" class="btn btn-outline-primary">
-                            Read First
-                        </a>
-                        <a href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=last_chapter.chapter_num) }}" class="btn btn-outline-primary">
-                            Read Last
-                        </a>
+
+                        {% if first_chapter %}
+                            <a href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=first_chapter.chapter_num) }}" class="btn btn-outline-primary">
+                                Read First
+                            </a>
+                        {% else %}
+                            <a href="#" class="btn btn-outline-primary disabled">
+                                Read First
+                            </a>
+                        {% endif %}
+
+                        {% if last_chapter %}
+                            <a href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=last_chapter.chapter_num) }}" class="btn btn-outline-primary">
+                                Read Last
+                            </a>
+                        {% else %}
+                            <a href="#" class="btn btn-outline-primary disabled">
+                                Read Last
+                            </a>
+                        {% endif %}
+
                     </div>
 
                     <div class="w-100 mb-3">
