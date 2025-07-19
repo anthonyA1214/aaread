@@ -10,27 +10,31 @@
             <div class="col-12 mb-3">
                 <div id="aareadCarousel" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#aareadCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                        <button type="button" data-bs-target="#aareadCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                        <button type="button" data-bs-target="#aareadCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        <button type="button" data-bs-target="#aareadCarousel" data-bs-slide-to="0" class="active bg-dark bg-opacity-75" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#aareadCarousel" data-bs-slide-to="1" class="bg-dark bg-opacity-75" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#aareadCarousel" data-bs-slide-to="2" class="bg-dark bg-opacity-75" aria-label="Slide 3"></button>
                     </div>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="{{ url_for('static', filename='uploads/placeholder.png')}}" class="d-block w-100 object-fit-cover" style="max-height: 300px;" alt="...">
+                            <img src="https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg" class="d-block w-100 object-fit-cover" style="max-height: 300px;" alt="...">
                         </div>
                         <div class="carousel-item">
-                            <img src="{{ url_for('static', filename='uploads/placeholder.png')}}" class="d-block w-100 object-fit-cover" style="max-height: 300px;" alt="...">
+                            <img src="https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg" class="d-block w-100 object-fit-cover" style="max-height: 300px;" alt="...">
                         </div>
                         <div class="carousel-item">
-                            <img src="{{ url_for('static', filename='uploads/placeholder.png')}}" class="d-block w-100 object-fit-cover" style="max-height: 300px;" alt="...">
+                            <img src="https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg" class="d-block w-100 object-fit-cover" style="max-height: 300px;" alt="...">
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#aareadCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <div class="bg-dark bg-opacity-75 p-2 rounded-circle d-flex justify-content-center align-items-center">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>                    
+                        </div>
                         <span class="visually-hidden">Previous</span>
                     </button>
                     <button class="carousel-control-next" type="button" data-bs-target="#aareadCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <div class="bg-dark bg-opacity-75 p-2 rounded-circle d-flex justify-content-center align-items-center">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </div>
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>
@@ -48,10 +52,10 @@
                     <!-- ONLY FOUR CARDS -->
                     {% for novel in popular_novels %}
                         <div class="col-6 col-md-3">
-                            <a href="{{ url_for('view_novel', novel_id=novel.id )}}" class="text-decoration-none">
+                            <a href="{{ url_for('view_novel', novel_id=novel.id) }}" class="text-decoration-none">
                                 <div class="card h-100">
-                                    <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png') }}" class="card-img-top img-fluid object-fit-cover overflow-hidden h-100 w-100" alt="..." style="aspect-ratio: 2 / 3;">
-                                    <div class="card-body">
+                                    <img src="{{ novel.cover_image if novel.cover_image else 'https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg' }}" class="card-img-top img-fluid object-fit-cover overflow-hidden h-100 w-100" alt="..." style="aspect-ratio: 2 / 3;">
+                                    <div class="card-body bg-body-tertiary border-top">
                                         <p class="card-text text-truncate fw-semibold">{{ novel.title }}</p>
                                         <p class="card-text text-truncate small text-secondary mt-0">
                                             {% for genre in novel.genres %}
@@ -89,12 +93,16 @@
                                             <!-- image left side -->
                                             <div class="col-4" style="aspect-ratio: 2 / 3;">
                                                 <a href="{{ url_for('view_novel', novel_id=novel.id )}}" class="text-decoration-none">
-                                                    <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png')}}" class="rounded img-fluid object-fit-cover w-100 h-100" alt="...">
+                                                    <img src="{{ novel.cover_image if novel.cover_image else 'https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg' }}" class="rounded img-fluid object-fit-cover w-100 h-100" alt="...">
                                                 </a>
                                             </div>
                                             <div class="col-8">
                                                 <div class="card-body">
-                                                    <p class="h6 card-title text-truncate mb-3">{{ novel.title }}</p>
+                                                    <p class="h6 card-title text-truncate mb-3">
+                                                        <a href="{{ url_for('view_novel', novel_id=novel.id) }}" class="text-decoration-none text-body">
+                                                            {{ novel.title }}
+                                                        </a>
+                                                    </p>
                                                     <div class="card-text d-flex flex-column gap-2">
                                                         {% for chapter in novel.latest_chapters %}
                                                             <div class="d-flex align-items-center justify-content-between">

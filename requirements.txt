@@ -1,3 +1,4 @@
+cloudinary
 email-validator  
 Flask  
 flask-moment  

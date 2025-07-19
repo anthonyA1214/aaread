@@ -21,12 +21,13 @@
                         <div class="w-100 position-relative" style="aspect-ratio: 2 / 3;">
 
                             <a href="{{ url_for('view_novel', novel_id=novel.id) }}" class="text-decoration-none">
-                                <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png')}}" class="rounded img-fluid object-fit-cover w-100 h-100" alt="...">
+                                <img src="{{ novel.cover_image if novel.cover_image else 'https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg' }}" class="rounded img-fluid object-fit-cover w-100 h-100 border" alt="...">
                             </a>
 
                             <div class="position-absolute start-0 end-0 bottom-0 p-2" style="background: rgba(0,0,0,0.3);">
-                                <button class="btn btn-sm btn-danger text-truncate w-100 removeFromLibraryBtn" data-novel-id="{{ novel.id }}">
-                                    <i class="bi bi-x"></i> Remove
+                                <button class="btn text-truncate w-100 toggleLibraryBtn btn-success in-library" data-novel-id="{{ novel.id }}">
+                                    <i class="bi bi-check2"></i> 
+                                    In Library
                                 </button>
                             </div>
                         </div>
@@ -64,5 +65,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', filename='userLibrary.js') }}"></script>
+    <script src="{{ url_for('static', filename='toggleLibrary.js') }}"></script>
 {% endblock %}

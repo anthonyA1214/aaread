@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, redirect, request, session, g, flash, get_flashed_messages, jsonify
+from flask import Flask, render_template, redirect, request, session, g, flash, get_flashed_messages, jsonify, url_for
 from flask_session import Session
 from flask_migrate import Migrate
 from flask_moment import Moment
@@ -16,8 +16,18 @@ from models.novel import Novel
 from models.chapter import Chapter
 
 from dotenv import load_dotenv
+import cloudinary
 
+# to load .env file
 load_dotenv()
+
+# Cloudinary Configuration       
+cloudinary.config( 
+    cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key = os.getenv("CLOUDINARY_API_KEY"),
+    api_secret = os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True
+)
 
 # Configure the Flask application
 app = Flask(__name__)
@@ -230,15 +240,12 @@ def novels():
     if request.method == "POST":
         pass
     else:
-        user_id = session.get("user_id")
-
-        user = User.query.get(user_id) if user_id else None
-
         novels = Novel.query.all()
 
-        saved_ids = {novel.id for novel in user.saved_novels} if user else set()
+        user_id = session.get("user_id")
+        user = User.query.get(user_id) if user_id else None
 
-        return render_template("public/novels.html", novels=novels, saved_ids=saved_ids)
+        return render_template("public/novels.html", novels=novels, user=user)
 
 
 @app.route("/novels/<int:novel_id>")
@@ -250,7 +257,14 @@ def view_novel(novel_id):
     first_chapter = chapters[0] if chapters else None
     last_chapter = chapters[-1] if chapters else None
 
-    return render_template("public/view_novel.html", novel=novel, first_chapter=first_chapter, last_chapter=last_chapter)
+    user_id = session.get("user_id")
+    user = User.query.get(user_id) if user_id else None
+    in_library = False
+
+    if user:
+        in_library = novel in user.saved_novels
+
+    return render_template("public/view_novel.html", novel=novel, first_chapter=first_chapter, last_chapter=last_chapter, in_library=in_library)
 
 
 @app.route("/novels/<int:novel_id>/chapters/<int:chapter_num>")
@@ -259,15 +273,32 @@ def read_chapter(novel_id, chapter_num):
     novel = Novel.query.get_or_404(novel_id)
     chapter = Chapter.query.filter_by(novel_id=novel_id, chapter_num=chapter_num).first_or_404()
 
-    prev_chapter = Chapter.query.filter_by(novel_id=novel_id, chapter_num=chapter_num - 1).first()
-    next_chapter = Chapter.query.filter_by(novel_id=novel_id, chapter_num=chapter_num + 1).first()
+    prev_chapter = (
+        Chapter.query
+        .filter(Chapter.novel_id == novel_id, Chapter.chapter_num < chapter_num)
+        .order_by(Chapter.chapter_num.desc())
+        .first()
+    )
+
+    next_chapter = (
+        Chapter.query
+        .filter(Chapter.novel_id == novel_id, Chapter.chapter_num > chapter_num)
+        .order_by(Chapter.chapter_num.asc())
+        .first()
+    )
+
+    if novel.cover_image:
+        cover_url = novel.cover_image
+    else:
+        cover_url = "https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg"
 
     return render_template("public/read_chapter.html", 
                            novel=novel, 
                            chapter=chapter, 
                            chapter_num=chapter_num, 
                            prev_chapter=prev_chapter, 
-                           next_chapter=next_chapter)
+                           next_chapter=next_chapter,
+                           cover_url=cover_url)
 
 
 @app.route("/library")

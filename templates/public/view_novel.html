@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-md-3 text-center mb-3 mb-lg-0 d-flex align-items-center justify-content-center">
                     <div class="position-relative w-100" style="aspect-ratio: 2/3;">
-                        <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png') }}" class="object-fit-cover w-100 h-100 img-fluid rounded">
+                        <img src="{{ novel.cover_image if novel.cover_image else 'https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg' }}" class="object-fit-cover w-100 h-100 img-fluid rounded border">
                         <!-- Overlay Container for Buttons -->
                         <div class="position-absolute start-0 end-0 bottom-0 p-2" style="background: rgba(0,0,0,0.3);">
                             <div class="d-flex flex-column gap-2">
@@ -26,9 +26,10 @@
                                 {% endif %}
 
                                 {% if is_loggedin %}
-                                    <a class="btn btn-primary text-truncate w-100">
-                                        <i class="bi bi-plus"></i> Add to Library
-                                    </a>
+                                    <button class="btn text-truncate w-100 toggleLibraryBtn {{ 'btn-success in-library' if in_library else 'btn-primary' }}" data-novel-id="{{ novel.id }}">
+                                        <i class="bi {{ 'bi-check2' if in_library else 'bi-plus' }}"></i> 
+                                        {{ 'In Library' if in_library else 'Add to Library' }}
+                                    </button>
                                 {% endif %}
                             </div>
                         </div>
@@ -123,4 +124,5 @@
 
 {% block script %}
     <script src="{{ url_for('static', filename='tooltip.js') }}"></script>
+    <script src="{{ url_for('static', filename='toggleLibrary.js') }}"></script>
 {% endblock %}

@@ -10,9 +10,3 @@ log.sql
 .env
 # flask session files
 flask_session/
-
-# Ignore everything in the uploads folder
-static/uploads/*
-
-# But don't ignore this specific file
-!static/uploads/placeholder.png

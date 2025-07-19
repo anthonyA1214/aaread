@@ -23,7 +23,7 @@
                     <div class="bg-body shadow rounded p-2">
                         <label for="coverInput" class="d-block" style="aspect-ratio: 2/3; cursor: pointer;">
                             <!-- Preview Image -->
-                            <img id="coverPreview" src="{% if novel.cover_image %}{{ url_for('static', filename=novel.cover_image.replace('\\', '/')) }}{% else %}{{ url_for('static', filename='images/placeholder.png') }}{% endif %}" alt="Cover Preview" class="rounded object-fit-cover img-fluid w-100 h-100" style="z-index: 0; display: {{ 'flex' if novel.cover_image else 'none'}};">
+                            <img id="coverPreview" src="{{ novel.cover_image if novel.cover_image else 'https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg' }}" alt="Cover Preview" class="rounded object-fit-cover img-fluid w-100 h-100" style="z-index: 0; display: {{ 'flex' if novel.cover_image else 'none'}};">
 
                             <div id="placeholder" class="rounded w-100 h-100 flex-column justify-content-center align-items-center text-center border bg-body-tertiary" style="z-index: 1; display: {{ 'none' if novel.cover_image else 'flex' }};">
                                 <i class="bi bi-image fs-1 text-muted"></i>

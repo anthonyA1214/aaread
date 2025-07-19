@@ -1,5 +1,7 @@
 import os
 
+from urllib.parse import urlparse
+
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from helpers import admin_required
 from datetime import datetime, timezone
@@ -9,6 +11,9 @@ from models import db
 from models.genre import Genre
 from models.novel import Novel
 from models.chapter import Chapter
+
+import cloudinary.uploader
+import uuid
 
 # the first argument is the location of the second argument will be saved be it file or folder
 UPLOAD_FOLDER = os.path.join("static", "uploads")
@@ -70,21 +75,22 @@ def add_novel():
             posted_on = datetime.now(timezone.utc)
 
             file = request.files.get("cover_image")
-            cover_filename = None
+            cover_url = None
 
             if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                cover_filename = f"{title.replace(" ", "_")}_{filename}" # every space in the filename will be replaced by underscore
-                save_path = os.path.join(UPLOAD_FOLDER, cover_filename)
-
-                # Creates a folder if doesnt exit yet
-                os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-                file.save(save_path)
-
-            else:
-                # Default placeholder image path
-                cover_image_path = "static/uploads/placeholder.png"
+                try:
+                    upload_result = cloudinary.uploader.upload(
+                        file,
+                        folder="novel_covers",
+                        public_id = f"{title.replace(' ', '_')}_{uuid.uuid4().hex[:8]}",
+                        overwrite=True,
+                        resource_type="image"
+                    )
+                    cover_url = upload_result["secure_url"]
+                except Exception as e:
+                    flash("Failed to upload cover image.", "danger")
+                    print("Cloudinary upload error:", e)
+                    return redirect(request.url)
 
             new_novel = Novel(
                 title=title,
@@ -94,7 +100,8 @@ def add_novel():
                 released=released,
                 posted_by=posted_by,
                 posted_on=posted_on,
-                cover_image=os.path.join("uploads", cover_filename).replace('\\', '/') if cover_filename else None
+                updated_on = posted_on,
+                cover_image=cover_url
             )
 
             new_novel.genres = selected_genres
@@ -128,26 +135,35 @@ def edit_novel(novel_id):
         if not title:
             flash("Title is required.", "danger")
             return redirect(request.url)
-        
+
         file = request.files.get("cover_image")
         if file and allowed_file(file.filename):
+            # Optional: delete old image from Cloudinary
             if novel.cover_image:
-                old_path = os.path.join('static', novel.cover_image)
-                if os.path.exists(old_path):
-                    os.remove(old_path)
+                # extract public_id from the URL (e.g., 'novel_covers/title_uuid')
+                try:
+                    path = urlparse(novel.cover_image).path  # /v123456/novel_covers/title_uuid.jpg
+                    public_id = os.path.splitext(path.split("/")[-1])[0]  # title_uuid
+                    cloudinary.uploader.destroy(f"novel_covers/{public_id}")
+                except Exception as e:
+                    print("Cloudinary delete failed:", e)
 
-            
-            filename = secure_filename(file.filename)
-            cover_filename = f"{title.replace(" ", "_")}_{filename}"
-            save_path = os.path.join(UPLOAD_FOLDER, cover_filename)
+            # Upload new cover
+            try:
+                upload_result = cloudinary.uploader.upload(
+                    file,
+                    folder="novel_covers",
+                    public_id=f"{title.replace(' ', '_')}_{uuid.uuid4().hex[:8]}",
+                    overwrite=True,
+                    resource_type="image"
+                )
+                novel.cover_image = upload_result["secure_url"]
+            except Exception as e:
+                flash("Failed to upload new cover image.", "danger")
+                print("Cloudinary upload error:", e)
+                return redirect(request.url)
 
-            # Creates a folder if doesnt exit yet
-            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-            file.save(save_path)
-
-            novel.cover_image = os.path.join("uploads", cover_filename).replace("\\", "/")
-        
+        # Update other fields
         novel.title = title
         novel.description = description
         novel.status = status
@@ -160,10 +176,8 @@ def edit_novel(novel_id):
         flash("Novel updated successfully!", "success")
         return redirect(url_for("admin.view_novels"))
 
-
     else:
         genres = Genre.query.order_by(Genre.name.asc()).all()
-
         return render_template("admin/novels/edit.html", novel=novel, genres=genres)
 
 @admin_bp.route("/novels/<int:novel_id>/delete", methods=["POST"])

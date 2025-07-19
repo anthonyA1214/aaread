@@ -20,19 +20,20 @@
                         <div class="w-100 position-relative" style="aspect-ratio: 2 / 3;">
 
                             <a href="{{ url_for('view_novel', novel_id=novel.id) }}" class="text-decoration-none">
-                                <img src="{{ url_for('static', filename=novel.cover_image) if novel.cover_image else url_for('static', filename='uploads/placeholder.png')}}" class="rounded img-fluid object-fit-cover w-100 h-100" alt="...">
+                                <img src="{{ novel.cover_image if novel.cover_image else 'https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg' }}" class="rounded img-fluid object-fit-cover w-100 h-100 border" alt="...">
                             </a>
                             {% if is_loggedin %}
                                 <div class="position-absolute start-0 end-0 bottom-0 p-2" style="background: rgba(0,0,0,0.3);">
                                     
-                                    {% if novel.id in saved_ids %}
-                                        <button class="btn btn-sm btn-success text-truncate w-100" disabled>
-                                            <i class="bi bi-check2"></i> In Library
+                                    {% if novel in user.saved_novels %}
+                                        <button class="btn text-truncate w-100 toggleLibraryBtn btn-success in-library" data-novel-id="{{ novel.id }}">
+                                            <i class="bi bi-check2"></i> 
+                                            In Library
                                         </button>
                                     {% else %}
-                                        
-                                        <button class="btn btn-sm btn-primary text-truncate w-100 addToLibraryBtn" data-novel-id="{{ novel.id }}">
-                                            <i class="bi bi-plus"></i> Add to Library
+                                        <button class="btn text-truncate w-100 toggleLibraryBtn btn-primary" data-novel-id="{{ novel.id }}">
+                                            <i class="bi bi-plus"></i> 
+                                            Add to Library
                                         </button>
                                     {% endif %}
                                     
@@ -74,5 +75,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', filename='userLibrary.js') }}"></script>
+    <script src="{{ url_for('static', filename='toggleLibrary.js') }}"></script>
 {% endblock %}
