@@ -15,10 +15,14 @@ from models.user import User
 from models.novel import Novel
 from models.chapter import Chapter
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Configure the Flask application
 app = Flask(__name__)
 moment = Moment(app)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
@@ -255,9 +259,15 @@ def read_chapter(novel_id, chapter_num):
     novel = Novel.query.get_or_404(novel_id)
     chapter = Chapter.query.filter_by(novel_id=novel_id, chapter_num=chapter_num).first_or_404()
 
+    prev_chapter = Chapter.query.filter_by(novel_id=novel_id, chapter_num=chapter_num - 1).first()
+    next_chapter = Chapter.query.filter_by(novel_id=novel_id, chapter_num=chapter_num + 1).first()
 
-
-    return render_template("public/read_chapter.html", novel=novel, chapter=chapter)
+    return render_template("public/read_chapter.html", 
+                           novel=novel, 
+                           chapter=chapter, 
+                           chapter_num=chapter_num, 
+                           prev_chapter=prev_chapter, 
+                           next_chapter=next_chapter)
 
 
 @app.route("/library")

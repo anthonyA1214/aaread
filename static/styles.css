@@ -195,6 +195,13 @@
   background-color: rgba(63, 81, 181, 0.04) !important; /* optional light background tint */
 }
 
+
+/* Active state */
+.hover-glow.active {
+  border-color: #3F51B5 !important;
+  background-color: rgba(63, 81, 181, 0.08) !important; /* slightly darker than hover */
+}
+
 /* READER PAGE */
 
 #reader-body #reader-content {

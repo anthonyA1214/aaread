@@ -82,6 +82,10 @@ def add_novel():
 
                 file.save(save_path)
 
+            else:
+                # Default placeholder image path
+                cover_image_path = "static/uploads/placeholder.png"
+
             new_novel = Novel(
                 title=title,
                 description=description,

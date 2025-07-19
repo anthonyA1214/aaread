@@ -1,7 +1,9 @@
-email-validator
-Flask
-Flask-Session
-Flask-SQLAlchemy
-Flask-Migrate
-python-dotenv
-flask-moment
+email-validator  
+Flask  
+flask-moment  
+Flask-Migrate  
+Flask-Session  
+Flask-SQLAlchemy  
+gunicorn  
+psycopg2-binary  
+python-dotenv  

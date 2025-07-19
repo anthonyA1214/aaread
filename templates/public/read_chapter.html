@@ -14,13 +14,38 @@
     <body id="reader-body" class="d-flex flex-column min-vh-100 sora">
         
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="z-index: 1100;">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <div class="position-relative border-bottom border-5" style="background-position: center; background-size: cover; height: 180px; background-image: url('{{ url_for('static', filename=novel.cover_image) }}');">
+
+                <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.5); z-index: 1;"></div>
+                
+                <button type="button" class="btn-close btn-close-white text-white position-absolute top-0 end-0 m-2" data-bs-dismiss="offcanvas" aria-label="Close" style="z-index: 2;"></button>
             </div>
-            <div class="offcanvas-body">
-                ...
+
+            <div class="offcanvas-body m-0 p-2">
+
+                <div class="text-center mt-3">
+                    <p class="fs-5 d-inline-block border-bottom border-2 mb-0" style="border-color: #3F51B5 !important;">{{ novel.title }}</p>
+                </div>
+
+                <hr class="mt-0 mb-3">
+
+                <div class="d-flex align-items-center bg-body my-2 p-2">
+                    <p class="fw-light mb-0">{{ novel.chapters|length }} Chapters</p>
+                </div>
+
+                {% for chapter in novel.chapters %} 
+                    {% set is_active = chapter.chapter_num == chapter_num %}
+                    <a href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=chapter.chapter_num) }}" class="text-decoration-none text-body">
+                        <div class="border rounded bg-body p-3 shadow-sm hover-glow my-2 {% if is_active %} active{% endif %}">
+                            <small class="text-muted">Chapter {{ chapter.chapter_num }}</small>
+                            <div class="d-flex align-items-center mb-1 fs-6">
+                                {{ chapter.title }}
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
             </div>
+
         </div>
 
         <!-- header bar-->
@@ -92,15 +117,29 @@
         <div id="reader-footer" class="reader-ui fixed-bottom bg-body-tertiary shadow-sm">
             <div class="container d-flex justify-content-between align-items-center">
 
-                <a href="#" class="btn btn-sm border-0 text-body d-flex align-items-center gap-1">
-                    <i class="bi bi-arrow-left fs-3"></i>
-                    <span class="fw-normal">Prev</span>
-                </a>
+                {% if prev_chapter %}
+                    <a href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=prev_chapter.chapter_num) }}" class="btn btn-sm border-0 text-body d-flex align-items-center gap-1">
+                        <i class="bi bi-arrow-left fs-3"></i>
+                        <span class="fw-normal">Prev</span>
+                    </a>
+                {% else %}
+                    <a href="#" class="btn btn-sm border-0 text-body d-flex align-items-center gap-1 disabled">
+                        <i class="bi bi-arrow-left fs-3"></i>
+                        <span class="fw-normal">Prev</span>
+                    </a>
+                {% endif %}
 
-                <a href="#" class="btn btn-sm border-0 text-body d-flex align-items-center gap-1">
-                    <span class="fw-normal">Next</span>
-                    <i class="bi bi-arrow-right fs-3"></i>
-                </a>
+                {% if next_chapter %}
+                    <a href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=next_chapter.chapter_num) }}" class="btn btn-sm border-0 text-body d-flex align-items-center gap-1">
+                        <span class="fw-normal">Next</span>
+                        <i class="bi bi-arrow-right fs-3"></i>
+                    </a>
+                {% else %}
+                    <a href="#" class="btn btn-sm border-0 text-body d-flex align-items-center gap-1 disabled">
+                        <span class="fw-normal">Next</span>
+                        <i class="bi bi-arrow-right fs-3"></i>
+                    </a>
+                {% endif %}
 
             </div>
         </div>
