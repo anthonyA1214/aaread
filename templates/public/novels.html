@@ -17,10 +17,14 @@
             <div class="col-12 border-bottom py-4">
                 <div class="row g-3" style="min-height: 190px;">
                     <div class="col-4 col-sm-3 col-md-2 d-flex align-items-center">
-                        <div class="w-100 position-relative" style="aspect-ratio: 2 / 3;">
+                        <div class="w-100 position-relative">
 
                             <a href="{{ url_for('view_novel', novel_id=novel.id) }}" class="text-decoration-none">
-                                <img src="{{ novel.cover_image if novel.cover_image else 'https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg' }}" class="rounded img-fluid object-fit-cover w-100 h-100 border" alt="...">
+                                <div class="border" style="aspect-ratio: 2 / 3;">
+                                    
+                                    <img src="{{ novel.cover_image if novel.cover_image else 'https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg' }}" class="rounded img-fluid object-fit-cover w-100 h-100" alt="...">
+                    
+                                </div>
                             </a>
                             {% if is_loggedin %}
                                 <div class="position-absolute start-0 end-0 bottom-0 p-2" style="background: rgba(0,0,0,0.3);">

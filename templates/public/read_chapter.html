@@ -38,7 +38,7 @@
                     <a href="{{ url_for('read_chapter', novel_id=novel.id, chapter_num=chapter.chapter_num) }}" class="text-decoration-none text-body">
                         <div class="border rounded bg-body p-3 shadow-sm hover-glow my-2 {% if is_active %} active{% endif %}">
                             <small class="text-muted">Chapter {{ chapter.chapter_num }}</small>
-                            <div class="d-flex align-items-center mb-1 fs-6">
+                            <div class="d-flex align-items-center mb-1 fs-6" style="min-height: 1rem; max-height: 1.3rem;">
                                 {{ chapter.title }}
                             </div>
                         </div>

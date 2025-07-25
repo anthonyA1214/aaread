@@ -52,19 +52,28 @@
                     <!-- ONLY FOUR CARDS -->
                     {% for novel in popular_novels %}
                         <div class="col-6 col-md-3">
-                            <a href="{{ url_for('view_novel', novel_id=novel.id) }}" class="text-decoration-none">
-                                <div class="card h-100">
-                                    <img src="{{ novel.cover_image if novel.cover_image else 'https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg' }}" class="card-img-top img-fluid object-fit-cover overflow-hidden h-100 w-100" alt="..." style="aspect-ratio: 2 / 3;">
-                                    <div class="card-body bg-body-tertiary border-top">
-                                        <p class="card-text text-truncate fw-semibold">{{ novel.title }}</p>
-                                        <p class="card-text text-truncate small text-secondary mt-0">
-                                            {% for genre in novel.genres %}
-                                                {{ genre.name }}{% if not loop.last %}, {% endif %}
-                                            {% endfor %}
-                                        </p>
+                            
+                            <div class="card h-100">
+                                <a href="{{ url_for('view_novel', novel_id=novel.id) }}" class="text-decoration-none">
+                                    <div style="aspect-ratio: 2/3;">
+                                        <img src="{{ novel.cover_image if novel.cover_image else 'https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg' }}" class="card-img-top img-fluid object-fit-cover overflow-hidden h-100 w-100" alt="...">
                                     </div>
+                                </a>
+                                <div class="card-body bg-body-tertiary border-top">
+                                    
+                                    <p class="card-text text-truncate fw-semibold">
+                                        <a href="{{ url_for('view_novel', novel_id=novel.id) }}" class="text-decoration-none text-body">
+                                            {{ novel.title }}
+                                        </a>
+                                    </p>
+                                    <p class="card-text text-truncate small text-secondary mt-0">
+                                        {% for genre in novel.genres %}
+                                            {{ genre.name }}{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </p>
                                 </div>
-                            </a>                   
+                            </div>
+                
                         </div>
                     {% endfor %}
                 </div>
@@ -91,9 +100,11 @@
                                     <div class="card h-100 border-0 pb-2 mb-3">
                                         <div class="row g-0">
                                             <!-- image left side -->
-                                            <div class="col-4" style="aspect-ratio: 2 / 3;">
+                                            <div class="col-4">
                                                 <a href="{{ url_for('view_novel', novel_id=novel.id )}}" class="text-decoration-none">
-                                                    <img src="{{ novel.cover_image if novel.cover_image else 'https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg' }}" class="rounded img-fluid object-fit-cover w-100 h-100" alt="...">
+                                                    <div class="border" style="aspect-ratio: 2/3;">
+                                                        <img src="{{ novel.cover_image if novel.cover_image else 'https://res.cloudinary.com/dha8kpdrp/image/upload/v1752913413/placeholder-image_elvsaz.jpg' }}" class="rounded img-fluid object-fit-cover w-100 h-100" alt="...">
+                                                    </div>
                                                 </a>
                                             </div>
                                             <div class="col-8">
