@@ -72,6 +72,12 @@ def page_not_found(e):
     return render_template("404.html"), 404
 
 
+# pinging the server to keep it alive
+@app.route("/ping")
+def ping():
+    return "pong", 200
+
+
 @app.route("/")
 def index():
     """Render the index page."""
