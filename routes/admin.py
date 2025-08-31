@@ -13,6 +13,7 @@ from models.novel import Novel
 from models.chapter import Chapter
 
 import cloudinary.uploader
+import re
 import uuid
 
 # the first argument is the location of the second argument will be saved be it file or folder
@@ -21,6 +22,12 @@ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "jfif", "gif"}
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def sanitize_for_cloudinary(text):
+    # keep only letters, numbers, dash, underscore, dot, and slash
+    return re.sub(r'[^a-zA-Z0-9_\-\.]', '_', text)
+
 
 # create the admin blueprint
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
@@ -79,10 +86,13 @@ def add_novel():
 
             if file and allowed_file(file.filename):
                 try:
+                    safe_title = sanitize_for_cloudinary(title)
+                    public_id = f"{safe_title}_{uuid.uuid4().hex[:8]}"
+
                     upload_result = cloudinary.uploader.upload(
                         file,
                         folder="novel_covers",
-                        public_id = f"{title.replace(' ', '_')}_{uuid.uuid4().hex[:8]}",
+                        public_id=public_id,
                         overwrite=True,
                         resource_type="image"
                     )
@@ -150,10 +160,13 @@ def edit_novel(novel_id):
 
             # Upload new cover
             try:
+                safe_title = sanitize_for_cloudinary(title)
+                public_id = f"{safe_title}_{uuid.uuid4().hex[:8]}"
+
                 upload_result = cloudinary.uploader.upload(
                     file,
                     folder="novel_covers",
-                    public_id=f"{title.replace(' ', '_')}_{uuid.uuid4().hex[:8]}",
+                    public_id=public_id,
                     overwrite=True,
                     resource_type="image"
                 )

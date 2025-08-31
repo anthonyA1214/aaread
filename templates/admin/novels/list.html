@@ -83,7 +83,7 @@
                                             <td>{{ novel.view_count }}</td>
                                             <td>
                                                 <div class="d-flex">
-                                                    <div class="ms-auto align-items-center gap-2">
+                                                    <div class="d-flex ms-auto align-items-center justify-content-center gap-2">
                                                         <a href="{{ url_for('admin.edit_novel', novel_id=novel.id) }}" class="btn btn-outline-primary border-0" data-bs-toggle="tooltip" data-bs-title="Edit novel" data-id="{{ novel['id'] }}" data-name="{{ novel['name'] }}">
                                                             <i class="bi bi-pencil"></i>
                                                         </a>
